@@ -12,6 +12,7 @@ body {
 
 .deliverables {
     margin: 0 auto;
+    
 }
 
 #deliverable_title, #project {
@@ -110,3 +111,36 @@ tr {
     height: 45px;
     margin-top: 5px;
 }
+
+
+<!-- TEAM PAGE STYLING --> 
+
+
+.row{
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 0 8px;
+  margin-bottom: 50px;
+}
+
+
+/* Style the counter cards */
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    text-align: center;
+    background-color: #f1f1f1;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
