@@ -1,0 +1,112 @@
+body {
+    justify-content: center;
+    background-color: #e1e0e0;
+}
+
+#deliv-desc {
+    text-align: center;
+    width: 80%;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.deliverables {
+    margin: 0 auto;
+}
+
+#deliverable_title, #project {
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: #222121;
+    position: bottom;
+    bottom: 0;
+    left: 0;
+    color: white;
+    text-align: center;
+    font-size: 1.5em;
+    height: 60px;
+    padding: 15px 0px 15px 0px;
+    width: 100%;
+}
+
+.jumbotron {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    padding: 20px;
+    justify-content: center;
+    text-align: center;
+    background-color: #cecece;
+}
+
+#logo {
+    width: 25%;
+    height: 25%;
+}
+
+#navbar {
+    position: fixed;
+}
+
+.proj-desc, .sponsor-desc {
+    margin: 0 auto;
+    padding: 15px;
+    text-align: left;
+    width: 100%;
+    font-size: 1.5em;
+}
+
+.project-div, .sponsor-div {
+    margin: 0 auto;
+    width: 80%;
+    justify-content: center;
+}
+
+#rescue-21 {
+    justify-content: center;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#sponsor-logo {
+    margin: 0 auto;
+    align-content: center;
+    display: flex;
+    padding: 15px;
+}
+
+table {
+    width: 75%;
+    margin: 25px;
+}
+
+table a {
+    color: black;
+}
+
+table, th, td {
+    font-size: 1.15em;
+    padding: 15px;
+  }
+
+th,td {
+    padding: 15px;
+}
+
+tr {
+    margin: 10px;
+    padding: 10px;
+}
+
+#whiteLogo {
+    width: 45px;
+    height: 45px;
+    margin-top: 5px;
+}
