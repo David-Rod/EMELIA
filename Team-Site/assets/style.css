@@ -3,6 +3,14 @@ body {
     background-color: #e1e0e0;
 }
 
+#conda-img {
+    width: 250px;
+    height: 200px;
+    left: 0%;
+    position: relative;
+    margin-top: 30px;
+}
+
 #deliv-desc {
     text-align: center;
     width: 80%;
@@ -67,6 +75,15 @@ footer {
     justify-content: center;
 }
 
+#python {
+    width: 200px;
+    height: 200px;
+    left: 40%;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 #rescue-21 {
     justify-content: center;
     display: block;
@@ -97,8 +114,17 @@ table, th, td {
     padding: 15px;
   }
 
+#tensor-flow {
+    width: 250px;
+    height: 200px;
+    left: 20%;
+    position: relative;
+    margin-top: 30px;
+}
+
 th,td {
-    padding: 15px;
+    width: 33%;
+    vertical-align: text-top;
 }
 
 tr {
@@ -112,35 +138,55 @@ tr {
     margin-top: 5px;
 }
 
-
-<!-- TEAM PAGE STYLING --> 
-
-
 .row{
     margin-bottom: 10px;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
+    text-align: center;
+    align-content: center;
 }
-
+​
 /* Float four columns side by side */
 .column {
-  float: left;
-  width: 25%;
-  padding: 0 8px;
-  margin-bottom: 50px;
+  margin: 0 auto;
+  width: 30%;
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: 2em;
 }
-
-
+​
+​
 /* Style the counter cards */
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    padding: 10px;
+    padding: 40px;
+    border-radius: 20px;
     text-align: center;
     background-color: #f1f1f1;
+    height: 350px;
+    width: 300px;
+    align-content: center;
 }
-
+​
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
-
+​
+.sponsorCard 
+{
+  padding: 40px;
+  background: #F5F5F5;
+  max-width: 80%;
+  height: 60%;
+  border-radius: 20px;
+  margin: 60px auto;
+  font-size: 10pt; 
+}
+​
+.sponsorCard:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
