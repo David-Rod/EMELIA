@@ -3,6 +3,10 @@ body {
     background-color: #e1e0e0;
 }
 
+#client_heading {
+    margin-top: 50px;
+}
+
 #conda-img {
     width: 250px;
     height: 200px;
