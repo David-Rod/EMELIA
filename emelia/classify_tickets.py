@@ -9,6 +9,7 @@ import time
 
 
 def main():
+	# This is a comment
     start_time = time.time()
     df = []
     line_count = 0
