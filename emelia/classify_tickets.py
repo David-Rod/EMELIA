@@ -26,6 +26,7 @@ def main():
     df = pd.DataFrame(df, columns=['EventCause', 'DetectionMethod',
                                    'RestoreMethod', 'FixClassification',
                                    'Subsystem', 'Relevance'])
+    print(df)
 
     df['EventCause'] = pd.Categorical(df['EventCause'])
     df['DetectionMethod'] = pd.Categorical(df['DetectionMethod'])
