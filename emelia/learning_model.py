@@ -50,3 +50,9 @@ def get_compiled_model():
                   metrics=['accuracy'])
 
     return model
+
+
+
+
+
+
