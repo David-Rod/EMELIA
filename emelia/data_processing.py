@@ -1,13 +1,12 @@
 import csv
-# import pandas as pd
-# from sklearn.preprocessing import OneHotEncoder, LabelEncoder
-'''
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
 
-from sklearn.compose import ColumnTransformer
-'''
+event_cause_vals = ['Random System Fault', 'Network Fault',
+                    'Upgrade/Maintenance', 'Design Understanding',
+                    'Design Problem', 'Environment or External', 'Induced',
+                    'Informational', 'Documentation']
+
+# TODO: Add all other lists that contain label options
 
 
 # This function iterates through the alarm data to create a master set of alarm
@@ -38,6 +37,12 @@ def make_incident_id_master_set():
                 incident_id_master.add(row[0])
 
     return sorted(incident_id_master)
+
+
+# Returns list of 0's that has a length of n
+def zerolistmaker(n):
+    listofzeros = [0] * n
+    return listofzeros
 
 
 # Function that creates a set of the incident ID's in the alarm file
@@ -125,28 +130,75 @@ def create_ticket_data_list():
     return ticket_data
 
 
-# Function that OneHot encodes the values in the list of data that contains
-# ticketID, hex vals, label vals
-'''
-def one_hot_encode(ticket_arr, hex_vals):
-    hex_list = sort(list(hex_vals))
-    one_hot_hex_list= []
-    temp_list = []
-    for ticket_label in ticket_arr:
-        for hex_val in hex_list[2]:
-            print("Ticket Label: " + str(type(ticket_label)))
-            print("Hex Val: " + str(type(hex_val)))
-            if ticket_label == hex_val:
-                temp_list.append(1.0)
-            else:
-                temp_list.append(0.0)
-            one_hot_hex_list.append(temp_list)
-            temp_list = []
-    return one_hot_hex_list
-    # TODO: implement OneHot encoding of my dataset
-'''
+# Gets the hex codes in the master array at index 1, and makes a result list
+# that contains all of the hex values for each ticket
+def get_hex_codes():
+    ticket_arr = create_id_label_feature_list()
+    result_list = []
+    for values in ticket_arr:
+        hex_vals = values[1]
+        result_list.append(hex_vals)
+    return result_list
 
 
+# This function will accept the array of values, from get_hex_codes, and return
+# and array of 0 and 1 depending on the hex values present in the array. Length
+# will be same as length of alarm master set
+def encode_hex_values(data_arr):
+    hex_list = list(make_alarm_hex_master_set())
+    list_len = len(hex_list)
+    temp_list = zerolistmaker(list_len)
+    for index in range(len(hex_list)):
+        if hex_list[index] in data_arr:
+            temp_list[index] = 1
+    return temp_list
+
+
+# Iterates through each hex_arr in get_hex_codes and will encode the data as an
+# array of 0 and 1 for each ticket
+def encode_ticket_hex_codes():
+    result_list = []
+    for hex_arr in get_hex_codes():
+        result_list.append(encode_hex_values(hex_arr))
+    return result_list
+
+
+# Gets all of the values from the master array at index 2, and makes a result
+# list that contains all of the label options for each ticket
+def get_label_options():
+    ticket_arr = create_id_label_feature_list()
+    result_list = []
+    for values in ticket_arr:
+        hex_vals = values[2]
+        result_list.append(hex_vals)
+    return result_list
+
+
+# encodes event cause and returns an array the length of event_cause_vals
+def encode_event_cause_options(value):
+    list_len = len(event_cause_vals)
+    temp_list = zerolistmaker(list_len)
+    for option in range(len(event_cause_vals)):
+        # TODO: May need to revert index(value) back to data_arr[option]
+        if value == event_cause_vals[option]:
+            temp_list[option] = 1
+        else:
+            temp_list[option] = 0
+    return temp_list
+
+
+# Target the specific index value inside the label array, within the array of
+# incident ID, [hex_vals], [label option] --> This retrieves event cause labels
+def get_event_cause_val():
+    index_val = 0
+    option_list = get_label_options()
+    result_list = []
+    for values in option_list:
+        result_list.append(encode_event_cause_options(values[index_val]))
+    return result_list
+
+
+# Takes in a data set and writes that set, line by line, to the filename
 def write_to_file(data, filename):
     with open(filename, 'w') as result_file:
         try:
@@ -156,4 +208,25 @@ def write_to_file(data, filename):
             raise ValueError("Failed to write to file")
 
 
-write_to_file(create_id_label_feature_list(), 'result_file.txt')
+# TODO: Make this function more generic to accept different input params
+def convert_array_to_np_array(input_data):
+    numpy_array = np.array(input_data)
+    numpy_array = numpy_array.astype(int)
+    return numpy_array
+
+
+# Function calls that write to output files. This will help the team verify the
+# data correlates to tickets appropriately
+# print(type(encode_ticket_hex_codes()))
+# write_to_file(encode_ticket_hex_codes(), 'encoded_hex.txt')
+# write_to_file(get_event_cause_val(), 'encoded_event_cause.txt')
+# write_to_file(create_id_label_feature_list(), 'result_file.txt')
+# numpy_array = np.array(encode_ticket_hex_codes()).astype(int)
+
+
+# print(convert_array_to_np_array().dtype)
+# print(convert_array_to_np_array().ndim)
+encode_hex = convert_array_to_np_array(encode_ticket_hex_codes())
+encode_event_cause = convert_array_to_np_array(get_event_cause_val())
+write_to_file(encode_hex, 'hexnumpyarray.txt')
+write_to_file(encode_event_cause, 'eventnumpyarray.txt')
