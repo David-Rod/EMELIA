@@ -1,57 +1,20 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import csv
-import pandas as pd
-import tensorflow as tf
+# from keras.models import model_from_json
 
-import time
+from learning_model import get_compiled_model
 
 
-def main():
-	# This is a comment
-    start_time = time.time()
-    df = []
-    line_count = 0
-    file = 'ticketdata.csv'
-
-    with open(file, encoding='utf8') as csv_file:
-        reader = csv.reader(csv_file)
-        for row in reader:
-            end = len(row)
-            start = end - 6
-            df.append(row[start:end])
-            line_count += 1
-
-    df = pd.DataFrame(df, columns=['EventCause', 'DetectionMethod',
-                                   'RestoreMethod', 'FixClassification',
-                                   'Subsystem', 'Relevance'])
-    print(df)
-
-    df['EventCause'] = pd.Categorical(df['EventCause'])
-    df['DetectionMethod'] = pd.Categorical(df['DetectionMethod'])
-    df['RestoreMethod'] = pd.Categorical(df['RestoreMethod'])
-    df['FixClassification'] = pd.Categorical(df['FixClassification'])
-    df['Subsystem'] = pd.Categorical(df['Subsystem'])
-    df['Relevance'] = pd.Categorical(df['Relevance'])
-
-    df['EventCause'] = df.EventCause.cat.codes
-    df['DetectionMethod'] = df.DetectionMethod.cat.codes
-    df['RestoreMethod'] = df.RestoreMethod.cat.codes
-    df['FixClassification'] = df.FixClassification.cat.codes
-    df['Subsystem'] = df.Subsystem.cat.codes
-    df['Relevance'] = df.Relevance.cat.codes
-
-    target = df.pop('Relevance')
-
-    dataset = tf.data.Dataset.from_tensor_slices((df.values, target.values))
-
-    train_dataset = dataset.shuffle(len(df)).batch(1)
-
+def classify_data(alarm_input_data, classification_label_data, filepath):
+    '''
     def get_compiled_model():
+
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(10, activation='relu'),
-            tf.keras.layers.Dense(10, activation='relu'),
+            tf.keras.layers.Dense(10, activation='softmax'),
+            tf.keras.layers.Dense(10, activation='softmax'),
+            tf.keras.layers.Dense(10, activation='softmax'),
+            tf.keras.layers.Dense(10, activation='softmax'),
             tf.keras.layers.Dense(1, activation='sigmoid')
         ])
 
@@ -59,21 +22,33 @@ def main():
                       loss='binary_crossentropy',
                       metrics=['accuracy'])
         return model
+    '''
+
+    # x_train = encode_ticket_hex_codes()[:1266]
+    # y_train = get_event_cause_val()[:1266]
+    x_train = alarm_input_data[:1266]
+    y_train = classification_label_data[:1266]
+
+    # x_test = encode_ticket_hex_codes()[1266:]
+    # y_test = get_event_cause_val()[1266:]
+    x_test = alarm_input_data[1266:]
+    y_test = classification_label_data[1266:]
 
     model = get_compiled_model()
-    model.fit(train_dataset, epochs=100, steps_per_epoch=20)
 
-    end_time = time.time()
-    runtime = round(end_time - start_time, 2)
-    avg_time_per_ticket = round(runtime / line_count, 5)
+    # Epochs pass the data n times through the system
+    history = model.fit(x_train,
+                        y_train,
+                        epochs=50,
+                        batch_size=75,
+                        validation_data=(x_test, y_test),
+                        verbose=1)
 
-    print("\n" * 2)
-    print("############################ METRICS ############################")
-    print("File: " + file)
-    print("Runtime: " + str(runtime) + "s")
-    print("Tickets processed: " + str(line_count))
-    print("AVG Time per Ticket: " + str(avg_time_per_ticket) + "s")
-
-
-if __name__ == "__main__":
-    main()
+    # model_json_string = model.to_json()
+    # model = model_from_json(model_json_string)
+    # model.save_weights(filepath=filepath)
+    results = model.evaluate(x_test, y_test)
+    # Eval accuracy of model on test data using the test labels in the file
+    # results = model.evaluate(test_data, test_labels)
+    print(history)
+    print("Results: " + str(results))
