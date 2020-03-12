@@ -217,16 +217,8 @@ def convert_array_to_np_array(input_data):
 
 # Function calls that write to output files. This will help the team verify the
 # data correlates to tickets appropriately
-# print(type(encode_ticket_hex_codes()))
-# write_to_file(encode_ticket_hex_codes(), 'encoded_hex.txt')
-# write_to_file(get_event_cause_val(), 'encoded_event_cause.txt')
-# write_to_file(create_id_label_feature_list(), 'result_file.txt')
-# numpy_array = np.array(encode_ticket_hex_codes()).astype(int)
-
-
-# print(convert_array_to_np_array().dtype)
-# print(convert_array_to_np_array().ndim)
 encode_hex = convert_array_to_np_array(encode_ticket_hex_codes())
 encode_event_cause = convert_array_to_np_array(get_event_cause_val())
 write_to_file(encode_hex, 'hexnumpyarray.txt')
 write_to_file(encode_event_cause, 'eventnumpyarray.txt')
+
