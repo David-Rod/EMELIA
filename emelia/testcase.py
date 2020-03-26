@@ -1,6 +1,14 @@
 import unittest
 import data_processing
 
+'''
+get_associated_hex_vals(id_val)
+create_id_label_feature_list()
+create_ticket_data_list()
+get_hex_codes()
+encode_event_cause_options(value)
+'''
+
 class TestDataProcessing(unittest.TestCase):
 
     alarm = 'testalarm.csv'
