@@ -84,7 +84,151 @@ class MyTest(unittest.TestCase):
         self.assertFalse(output == empty_list) # the resulting list should not be empty
         self.assertTrue(list_strict_equal(one_hot_encode_test_list, output)) # the resulting array should be sorted
 
-    #def test_get_event_cause_val(self): Do I need to test this one?
+    def test_make_alarm_hex_master_set(self):
+
+        alarm_hex_master_set = data_processing.make_alarm_hex_master_set()
+
+        alarm_hex_master_set_int = set(map(lambda x:int(x), alarm_hex_master_set))
+
+        # check length 
+        self.assertEqual(23, len(alarm_hex_master_set_int))
+
+        # check max value
+        self.assertEqual(3892, min(alarm_hex_master_set_int))
+
+        # check min value
+        self.assertEqual(90540, max(alarm_hex_master_set_int))
+
+
+    def test_make_incident_id_master_set(self):
+
+        incident_id_master_set = data_processing.make_alarm_hex_master_set()
+
+        # check length 
+        self.assertEqual(23, len(incident_id_master_set))
+
+        # check exsitance 1
+        self.assertFalse('STATION - CHANNEL ISLANDS HARBOR' in incident_id_master_set)
+
+        # check exsitance 2
+        self.assertFalse('RFF - ROBERTSDALE' in incident_id_master_set)
+
+        # check exsitance 3
+        self.assertFalse('STATION - RIO VISTA' in incident_id_master_set)
+
+
+    def test_get_alarm_file_incident_ids(self):
+
+        alarm_file_incident_ids = data_processing.get_alarm_file_incident_ids()
+
+        alarm_file_incident_ids_int = list(map(lambda x:int(x), alarm_file_incident_ids))
+
+        # check length 
+        self.assertEqual(24, len(alarm_file_incident_ids_int))
+
+
+    def test_get_id_hex_set(self):
+
+        id_hex_set = data_processing.get_id_hex_set()
+
+        self.assertFalse([] == id_hex_set)
+
+
+    def test_get_associated_hex_vals(self):
+        
+        # normal case
+        self.assertEqual(['844959', ['30914']],data_processing.get_associated_hex_vals(844959))
+        # NULL case
+        self.assertEqual(['24', []],data_processing.get_associated_hex_vals(24))
+
+
+    def test_make_incident_id_to_alarm_hex_list(self):
+
+        incident_id_to_alarm_hex_list = data_processing.make_incident_id_to_alarm_hex_list()
+
+        self.assertFalse([] == incident_id_to_alarm_hex_list)
+
+
+    def test_create_id_label_feature_list(self):
+        
+        id_label_feature_list = data_processing.create_id_label_feature_list()
+
+        self.assertFalse([] == id_label_feature_list)
+
+
+    def test_create_ticket_data_list(self):
+
+        ticket_data_list = data_processing.create_ticket_data_list()
+
+        # check length 
+        self.assertEqual(49, len(ticket_data_list))
+
+        ticket_data_list_rff = set(map(lambda x:x[3], ticket_data_list))
+
+        # check exsitance 1
+        self.assertTrue('STATION - CHANNEL ISLANDS HARBOR' in ticket_data_list_rff)
+
+        # check exsitance 2
+        self.assertTrue('RFF - ROBERTSDALE' in ticket_data_list_rff)
+
+        # check exsitance 3
+        self.assertTrue('STATION - RIO VISTA' in ticket_data_list_rff)
+
+
+    def test_get_hex_codes(self):
+
+        hex_codes = data_processing.get_hex_codes()
+
+        self.assertFalse([] == hex_codes)
+
+
+    def test_encode_hex_values(self):
+
+        hex_list = ['16898', '20603', '23086', '23510', '30914', '36065', 
+          '3892', '38977', '46457', '50622', '53811', '60039', '65266', '65428',
+          '67686', '6984', '7353', '75065', '76909', '84563', '89453', '89583', '90540']
+
+        hex_values = data_processing.encode_hex_values(hex_list)
+
+        # check length
+        self.assertEqual(len(hex_list), len(hex_values))
+
+        # check encoding
+        self.assertFalse(0 in hex_values)
+
+
+    def test_encode_ticket_hex_codes(self):
+
+        ticket_hex_codes = data_processing.encode_ticket_hex_codes()
+
+        self.assertFalse([] == ticket_hex_codes)
+
+
+    def test_get_label_options(self):
+
+        label_options = data_processing.get_label_options()
+
+        self.assertFalse([] == label_options)
+
+
+    def test_encode_event_cause_options(self):
+        
+        encoded_event_cause_options_0 = data_processing.encode_event_cause_options('Random System Fault')
+
+        # check place 0
+        self.assertEqual([1, 0, 0, 0, 0, 0, 0, 0, 0],  encoded_event_cause_options_0)
+
+        encoded_event_cause_options_3 = data_processing.encode_event_cause_options('Design Understanding')
+
+        # check place 3
+        self.assertEqual([0, 0, 0, 1, 0, 0, 0, 0, 0],  encoded_event_cause_options_3)
+
+
+    def test_get_event_cause_val(self):
+
+        event_cause_val = data_processing.get_event_cause_val()
+
+        self.assertFalse([] == event_cause_val)
 
 if __name__ == '__main__':
     unittest.main()
