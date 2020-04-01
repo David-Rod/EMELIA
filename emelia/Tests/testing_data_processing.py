@@ -24,6 +24,10 @@ class MyTest(unittest.TestCase):
         self.assertEqual(result, master_list) # check to ensure that no values are missing
         self.assertFalse(result == empty_list) # the resulting list should not be empty
         self.assertTrue(list_strict_equal(master_list, result)) # the resulting array should be sorted
+        # check max value
+        self.assertEqual(3892, min(alarm_hex_master_set_int))
+        # check min value
+        self.assertEqual(90540, max(alarm_hex_master_set_int))
 
     def test_get_alarm_file_incident_ids(self):
         incident_list = ['844959', '63955', '472910', '55762', '820447', '645022', '961690', '468249', '686822', '65014', '279819', '770915', '335436', '975290', '634412', '653117', '842937', '794241', '892720', '765948', '851897', '791273', '807302', '938463' ]
@@ -86,22 +90,6 @@ class MyTest(unittest.TestCase):
         self.assertFalse(output == empty_list) # the resulting list should not be empty
         self.assertTrue(list_strict_equal(one_hot_encode_test_list, output)) # the resulting array should be sorted
 
-    def test_make_alarm_hex_master_set(self):
-
-        alarm_hex_master_set = data_processing.make_alarm_hex_master_set()
-
-        alarm_hex_master_set_int = set(map(lambda x:int(x), alarm_hex_master_set))
-
-        # check length 
-        self.assertEqual(23, len(alarm_hex_master_set_int))
-
-        # check max value
-        self.assertEqual(3892, min(alarm_hex_master_set_int))
-
-        # check min value
-        self.assertEqual(90540, max(alarm_hex_master_set_int))
-
-
     def test_make_incident_id_master_set(self):
 
         incident_id_master_set = data_processing.make_alarm_hex_master_set()
@@ -118,24 +106,6 @@ class MyTest(unittest.TestCase):
         # check exsitance 3
         self.assertFalse('STATION - RIO VISTA' in incident_id_master_set)
 
-
-    def test_get_alarm_file_incident_ids(self):
-
-        alarm_file_incident_ids = data_processing.get_alarm_file_incident_ids()
-
-        alarm_file_incident_ids_int = list(map(lambda x:int(x), alarm_file_incident_ids))
-
-        # check length 
-        self.assertEqual(24, len(alarm_file_incident_ids_int))
-
-
-    def test_get_id_hex_set(self):
-
-        id_hex_set = data_processing.get_id_hex_set()
-
-        self.assertFalse([] == id_hex_set)
-
-
     def test_get_associated_hex_vals(self):
         
         # normal case
@@ -143,20 +113,11 @@ class MyTest(unittest.TestCase):
         # NULL case
         self.assertEqual(['24', []],data_processing.get_associated_hex_vals(24))
 
-
-    def test_make_incident_id_to_alarm_hex_list(self):
-
-        incident_id_to_alarm_hex_list = data_processing.make_incident_id_to_alarm_hex_list()
-
-        self.assertFalse([] == incident_id_to_alarm_hex_list)
-
-
     def test_create_id_label_feature_list(self):
         
         id_label_feature_list = data_processing.create_id_label_feature_list()
 
         self.assertFalse([] == id_label_feature_list)
-
 
     def test_create_ticket_data_list(self):
 
@@ -176,42 +137,17 @@ class MyTest(unittest.TestCase):
         # check exsitance 3
         self.assertTrue('STATION - RIO VISTA' in ticket_data_list_rff)
 
-
     def test_get_hex_codes(self):
 
         hex_codes = data_processing.get_hex_codes()
 
         self.assertFalse([] == hex_codes)
 
-
-    def test_encode_hex_values(self):
-
-        hex_list = ['16898', '20603', '23086', '23510', '30914', '36065', 
-          '3892', '38977', '46457', '50622', '53811', '60039', '65266', '65428',
-          '67686', '6984', '7353', '75065', '76909', '84563', '89453', '89583', '90540']
-
-        hex_values = data_processing.encode_hex_values(hex_list)
-
-        # check length
-        self.assertEqual(len(hex_list), len(hex_values))
-
-        # check encoding
-        self.assertFalse(0 in hex_values)
-
-
-    def test_encode_ticket_hex_codes(self):
-
-        ticket_hex_codes = data_processing.encode_ticket_hex_codes()
-
-        self.assertFalse([] == ticket_hex_codes)
-
-
     def test_get_label_options(self):
 
         label_options = data_processing.get_label_options()
 
         self.assertFalse([] == label_options)
-
 
     def test_encode_event_cause_options(self):
         
@@ -224,7 +160,6 @@ class MyTest(unittest.TestCase):
 
         # check place 3
         self.assertEqual([0, 0, 0, 1, 0, 0, 0, 0, 0],  encoded_event_cause_options_3)
-
 
     def test_get_event_cause_val(self):
 
