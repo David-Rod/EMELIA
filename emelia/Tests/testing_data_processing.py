@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../')
 import unittest
 import data_processing
 import numpy as np
