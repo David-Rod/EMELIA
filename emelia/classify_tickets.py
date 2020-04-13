@@ -8,8 +8,8 @@ from learning_model import get_compiled_model
 # training model
 def classify_data(alarm_input_data, classification_label_data, filepath):
 
-    x_ticket_data = classification_label_data[:1266]
-    y_alarm_data = alarm_input_data[:1266]
+    x_ticket_data = classification_label_data[:2132]
+    y_alarm_data = alarm_input_data[:2132]
 
     x_train, x_test, y_train, y_test = train_test_split(x_ticket_data,
                                                         y_alarm_data,
@@ -31,7 +31,7 @@ def classify_data(alarm_input_data, classification_label_data, filepath):
     # Epochs pass the data n times through the system
     history = model.fit(x_train,
                         y_train,
-                        epochs=10,
+                        epochs=30,
                         batch_size=50,
                         validation_data=(x_test, y_test),
                         verbose=2)
