@@ -1,5 +1,7 @@
 import tensorflow as tf
-from tensorflow import keras
+# from tensorflow import keras
+from keras.layers import Dense, Dropout, Input
+from keras.models import Sequential, Model
 # from keras.metrics import categorical_accuracy
 
 # from keras.models import load_model
@@ -9,15 +11,23 @@ from tensorflow import keras
 
 
 def get_compiled_model():
-    model = keras.Sequential()
+    # model = keras.Sequential()
+    model = Sequential()
     ###################### LAYERS ########################
     # Add layers
     ###################### INPUT  ########################
 
     # Embedding layer, looks up embedding vector for each word
-    model.add(keras.layers.Dense(125,
-                                 input_shape=(101,),
-                                 kernel_initializer='normal'))
+    #inputs = model.add(keras.layers.Dense(125,
+    #                                      input_shape=(101,),
+    #                                      kernel_initializer='normal'))
+    model.add(Dense(125,
+                    input_shape=(101,),
+                    kernel_initializer='normal'))
+    # inputs = Input(shape=(101,))
+    #model.add(Dense(125, activation=tf.nn.relu, kernel_initializer='normal')) #125, inp,activation=tf.nn.relu))
+    model.add(Dropout(0.5))
+    # model.add(keras.layers.Dense(125, activation=tf.nn.relu))
     '''
     model.add(keras.layers.Dropout(32,
                                  activation=tf.nn.softmax,
@@ -26,16 +36,20 @@ def get_compiled_model():
     ###################### HIDDEN ########################
 
     # 16 hidden units in the hidden layer using activation function
-    model.add(keras.layers.Dense(50, activation=tf.nn.relu))
-    model.add(keras.layers.Dropout(.5))
+    # model.add(keras.layers.Dense(125, activation=tf.nn.relu))
+    model.add(Dense(125, activation=tf.nn.relu))
+    # model.add(Dropout(0.5))
 
     ###################### OUTPUT ########################
-    model.add(keras.layers.Dense(9, activation=tf.nn.softmax))
+    # predictions = model.add(keras.layers.Dense(9, activation=tf.nn.softmax))
+    model.add(Dense(101, activation=tf.nn.softmax))
+    # model = Model(input=inputs, output=predictions)
 
     ##################### SUMMARY #######################
     # Provides summary table of the neural network for hidden layers and param data
-    model.summary()
+    # model.summary()
 
+    # model = Model(input=inputs, output=predictions)
     # Add optimizer and loss function to determine the confidence based on the 1
     # or 0, measure distance of probability distributions.
         # binary_crossentropy selected based on the 0 or 1 values
