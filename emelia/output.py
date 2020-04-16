@@ -13,26 +13,9 @@ def main():
     # starting timer
     start_time = time.time()
 
-
-    event_cause_options = get_event_cause_val()
-    for item in event_cause_options:
-        extra_zeros = zerolistmaker(92)
-        item.extend(extra_zeros)
-
-
-    # raise ValueError(event_cause_options[0])
-
-
     # converting lists to numpy array
     encoded_hex_codes = convert_array_to_np_array(encode_ticket_hex_codes())
-    # event_cause_options = convert_array_to_np_array(get_event_cause_val())
-
-    event_cause_options = convert_array_to_np_array(event_cause_options)
-
-    # encoded_hex_codes = np.transpose(encoded_hex_codes)
-    # event_cause_options = np.transpose(event_cause_options)
-    # raise ValueError(event_cause_options.shape)
-    # raise ValueError(encoded_hex_codes.shape)
+    event_cause_options = convert_array_to_np_array(get_event_cause_val())
 
     # training & saving the model
     classify_data(encoded_hex_codes,
@@ -46,7 +29,7 @@ def main():
     predict_actual = event_cause_options[2132:]
 
     # calling prediction from predict.py and returns array of confidence values
-    result_array = prediction(np.array(predict_input_hex[0:1]))
+    result_array = prediction(np.array(predict_input_hex))
 
     '''result.csv contains corresp. hex code,
     the correct classification (Actual),

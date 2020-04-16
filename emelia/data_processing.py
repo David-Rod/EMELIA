@@ -25,11 +25,6 @@ def make_alarm_hex_master_set():
     return sorted(alarm_hex_master)
 
 
-# alarm_master = make_alarm_hex_master_set()
-# print(alarm_master)
-# print("The lenght of the set is: " + str(len(alarm_master)))  101 total
-
-
 # This function iterates through the ticket data file to create set of incident
 # ID values that will be used to get corresponding hex values
 def make_incident_id_master_set():
@@ -43,11 +38,6 @@ def make_incident_id_master_set():
                 incident_id_master.add(row[0])
 
     return sorted(incident_id_master)
-
-
-# ticket_master = make_incident_id_master_set()
-# print(ticket_master)
-# print("The lenght of the set is: " + str(len(ticket_master)))  9306 total
 
 
 # Returns list of 0's that has a length of n
@@ -69,10 +59,6 @@ def get_alarm_file_incident_ids():
     return sorted(result_set)
 
 
-# tickets_in_alarm = get_alarm_file_incident_ids()
-# print(tickets_in_alarm)
-# print("The lenght of the set is: " + str(len(tickets_in_alarm)))  4639 total
-
 # Function will iterate through the set of incident ID's in the alarm file and
 # the incident ID's in the ticket file. If there is a match, it is added to the
 # set. The set is a union of ID's in both files
@@ -85,11 +71,6 @@ def get_id_hex_set():
             if item == value:
                 result_set.add(str(item))
     return sorted(result_set)
-
-
-# shared_ticket_id = get_id_hex_set()
-# print(shared_ticket_id)
-# print("The lenght of the set is: " + str(len(shared_ticket_id)))  3055 total
 
 
 # Function associates all related alarm values for an incident ID. Store the
@@ -121,21 +102,13 @@ def make_incident_id_to_alarm_hex_list():
     return result_list
 
 
-# id_to_hex = make_incident_id_to_alarm_hex_list()
-# print(id_to_hex)
-# print("The lenght of the set is: " + str(len(id_to_hex)))  3055 total
-
-
 # Function to ensure that all the label options for a ticket are not NULL
 # This function returns none if the counter equals the number of labels
 # Helper function for create_ticket_data_list()
 def check_for_valid_labels(row_values):
-    # list_of_row_labels = []
     null_counter = 0
-    # labels_per_ticket = 6
     end = len(row_values)
     start = end - 6
-    # print(row_values[start:end])
     for label in row_values[start:end]:
         if label == 'NULL':
             null_counter += 1
@@ -185,14 +158,6 @@ def remove_tickets_without_labels(ticket_array_values):
     return ticket_id_hex_label_arr
 
 
-# ticket_alarm_label_list = create_id_label_feature_list()
-# all_list = remove_tickets_without_labels(ticket_alarm_label_list)
-# for items in all_list:
-#    if len(items) < 2:
-#        print(items)
-# print("The lenght of the set is: " + str(len(all_list)))  3055 total
-
-
 # Gets the hex codes in the master array at index 1, and makes a result list
 # that contains all of the hex values for each ticket
 def get_hex_codes():
@@ -231,11 +196,6 @@ def encode_ticket_hex_codes():
     return result_list
 
 
-# encoded_hex = encode_ticket_hex_codes()
-# print(encoded_hex)
-# print("The lenght of the set is: " + str(len(encoded_hex)))  3055 total
-
-
 # Gets all of the values from the master array at index 2, and makes a result
 # list that contains all of the label options for each ticket. The result is
 # the list of options related to the shared tickets
@@ -249,14 +209,9 @@ def get_label_options():
     return result_list
 
 
-# labels = get_label_options()
-# print(labels)
-# print("The lenght of the set is: " + str(len(labels)))  # 3055 total
-
-
 # encodes event cause and returns an array the length of event_cause_vals
 def encode_event_cause_options(value):
-    list_len = len(event_cause_vals)
+    list_len = len(make_alarm_hex_master_set())
     temp_list = zerolistmaker(list_len)
     for option in range(len(event_cause_vals)):
         # TODO: May need to revert index(value) back to data_arr[option]
@@ -278,11 +233,6 @@ def get_event_cause_val():
     return result_list
 
 
-# for labels in get_event_cause_val():
-#    print(labels)
-# print("The length of the set is: " + str(len(labels)))   # 3055 total
-
-
 # Takes in a data set and writes that set, line by line, to the filename
 def write_to_file(data, filename):
     with open(filename, 'w') as result_file:
@@ -298,20 +248,3 @@ def convert_array_to_np_array(input_data):
     numpy_array = np.array(input_data)
     numpy_array = numpy_array.astype(int)
     return numpy_array
-
-
-# These values will produce the final array of:
-# [TICKET ID, [ASSOCIATED HEX VALUES], [LABELS FOR EACH COLUMN (6) TOTAL]]
-# tickets = create_id_label_feature_list()
-# write_to_file(remove_tickets_without_labels(tickets), 'RESULTS.txt')
-# print("Total tickets with Non-Null label values: "
-#      + str(len(remove_tickets_without_labels(tickets))))  # 2665 Total
-
-# OneHotEncoded event cause lists
-# ev = get_event_cause_val()
-# write_to_file(ev, 'EV.txt')
-
-# ethc = encode_ticket_hex_codes()
-# write_to_file(ethc, 'ETHC.txt')
-# for row in ethc:
-#    print(len(row))
