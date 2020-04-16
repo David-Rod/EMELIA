@@ -16,22 +16,12 @@ def classify_data(alarm_input_data, classification_label_data, filepath):
                                                         test_size=0.20,
                                                         random_state=0)
 
-    # x_train = alarm_input_data[:1012]
-    # x_train = alarm_input_data[316:1050]   USED LAST
-    # y_train = classification_label_data[:1012]
-    #y_train = classification_label_data[316:1050]   USED LAST
-
-    # x_test = alarm_input_data[1012:1266]
-    #x_test = alarm_input_data[1050:]   USED LAST
-    # y_test = classification_label_data[1012:1266]
-    #y_test = classification_label_data[1050:]   USED LAST
-
     model = get_compiled_model()
 
     # Epochs pass the data n times through the system
     history = model.fit(x_train,
                         y_train,
-                        epochs=30,
+                        epochs=20,
                         batch_size=50,
                         validation_data=(x_test, y_test),
                         verbose=2)
