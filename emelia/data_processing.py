@@ -211,7 +211,7 @@ def get_label_options():
 
 # encodes event cause and returns an array the length of event_cause_vals
 def encode_event_cause_options(value):
-    list_len = len(make_alarm_hex_master_set())
+    list_len = len(event_cause_vals)
     temp_list = zerolistmaker(list_len)
     for option in range(len(event_cause_vals)):
         # TODO: May need to revert index(value) back to data_arr[option]
