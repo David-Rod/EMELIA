@@ -1,21 +1,23 @@
 import tensorflow as tf
-from tensorflow import keras
+from keras.layers import Dense, Dropout
+from keras.models import Sequential
 
 
 def get_compiled_model():
     # ##################### LAYERS ####################### #
-    model = keras.Sequential()
+    model = Sequential()
     # ##################### INPUT  ####################### #
 
-    model.add(keras.layers.Dense(125, input_dim=101, activation=tf.nn.relu))
+    model.add(Dense(110,
+                    input_dim=101,
+                    activation='relu',
+                    kernel_initializer='normal'))
 
     # ##################### HIDDEN ####################### #
-    model.add(keras.layers.Dense(120, activation=tf.nn.relu))
-    model.add(keras.layers.Dense(110, activation=tf.nn.relu))
-    model.add(keras.layers.Dropout(0.3))
+    model.add(Dropout(0.8))
 
     # ##################### OUTPUT ####################### #
-    model.add(keras.layers.Dense(101, activation=tf.nn.softmax))
+    model.add(Dense(9, activation='softmax', kernel_initializer='normal'))
 
     # #################### SUMMARY ###################### #
     model.summary()

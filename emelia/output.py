@@ -5,8 +5,7 @@ from learning_model import prediction
 from classify_tickets import classify_data
 from data_processing import (encode_ticket_hex_codes,
                              get_event_cause_val,
-                             convert_array_to_np_array,
-                             zerolistmaker)
+                             convert_array_to_np_array)
 
 
 def main():
@@ -23,9 +22,7 @@ def main():
                   'event_cause_weights.hdf5')
 
     # 20 percent that needs to be tested
-    # predict_input_hex = encoded_hex_codes[1266:]
     predict_input_hex = encoded_hex_codes[2132:]
-    # predict_actual = event_cause_options[1266:]
     predict_actual = event_cause_options[2132:]
 
     # calling prediction from predict.py and returns array of confidence values
@@ -46,9 +43,8 @@ def main():
         predict_actual = np.array(predict_actual).tolist()
         result_array = np.array(result_array).tolist()
 
-        length_of_array = len(predict_input_hex)  # 317
-
-        num_of_vals = len(predict_actual[0])  # 9
+        length_of_array = len(predict_input_hex)  # 533 values from 2132-2665
+        num_of_vals = len(predict_actual[0])  # 9 values for the assoc label
 
         # loops through rows
         for rows in range(length_of_array):
@@ -79,7 +75,7 @@ def main():
 
     # run time
     runtime = round(end_time - start_time, 2)
-    avg_time_per_ticket = round(runtime / 1583, 5)
+    avg_time_per_ticket = round(runtime / 2665, 5)
 
     print("\n" * 2)
     print("############################ METRICS ############################")
