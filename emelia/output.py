@@ -26,7 +26,7 @@ def main():
     predict_actual = event_cause_options[2132:]
 
     # calling prediction from predict.py and returns array of confidence values
-    result_array = prediction(np.array(predict_input_hex))
+    result_array = prediction(predict_input_hex)
 
     '''result.csv contains corresp. hex code,
     the correct classification (Actual),
@@ -45,7 +45,7 @@ def main():
 
         length_of_array = len(predict_input_hex)  # 533 values from 2132-2665
         num_of_vals = len(predict_actual[0])  # 9 values for the assoc label
-
+        true_counter = 0
         # loops through rows
         for rows in range(length_of_array):
             greatest_percent = max(result_array[rows])
@@ -59,10 +59,10 @@ def main():
 
             # if the index of largest confidence value equals the index of
             # actual classification
-            for working_index in range(num_of_vals):
-                if predict_actual[rows][working_index] == 1 \
-                    and working_index == position:
+            for index in range(num_of_vals):
+                if predict_actual[rows][index] == 1 and index == position:
                     boolean = True
+                    true_counter += 1
 
             writer.writerow({'Hex Code': predict_input_hex[rows],
                              'Actual': predict_actual[rows],
@@ -78,9 +78,11 @@ def main():
     avg_time_per_ticket = round(runtime / 2665, 5)
 
     print("\n" * 2)
-    print("############################ METRICS ############################")
+    print("############################# METRICS ############################")
     print("Runtime: " + str(runtime) + "s")
-    print("AVG Time per Ticket: " + str(avg_time_per_ticket) + "s")
+    print("Average Time per Ticket: " + str(avg_time_per_ticket) + "s")
+    print("Accuracy of system for test tickets - event cause label:  "
+          + str(true_counter / length_of_array))
 
 
 if __name__ == "__main__":
