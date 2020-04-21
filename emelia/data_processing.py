@@ -5,8 +5,15 @@ event_cause_vals = ['Random System Fault', 'Network Fault',
                     'Upgrade/Maintenance', 'Design Understanding',
                     'Design Problem', 'Environment or External', 'Induced',
                     'Informational', 'Documentation']
-
-# TODO: Add all other lists that contain label options
+detection_method = ['Polling', 'Trap', 'Call in/Email', 'GD Initiated']
+restore_method = ['GD Field Fix', 'CCC Fix', 'Non-GD Fix', 'Auto Fix',
+                  'Not Applicable']
+fix_classification = ['HW Replaced', 'Configuration', 'HW Serviced/Reset',
+                      'SW Restart', 'Not Applicable']
+subsystem = ['Network', 'DF LOBs & Caller Position', 'Workstation/Server HW',
+             'DSC & V4 HW/SW', 'RF Hardware', 'Infrastructure', 'Peripherals',
+             'Encrypted Comms', 'Archive Subsystem', 'CG IA', 'No Subsystem']
+relevance = ['Equipment', 'Coast Guard', 'Disaster']
 
 
 # This function iterates through the alarm data to create a master set of alarm
@@ -210,12 +217,13 @@ def get_label_options():
 
 
 # encodes event cause and returns an array the length of event_cause_vals
-def encode_event_cause_options(value):
-    list_len = len(event_cause_vals)
+# TODO: fix references to this function in the testing module
+def encode_labels(label_arr, value):
+    list_len = len(label_arr)
     temp_list = zerolistmaker(list_len)
-    for option in range(len(event_cause_vals)):
+    for option in range(len(label_arr)):
         # TODO: May need to revert index(value) back to data_arr[option]
-        if value == event_cause_vals[option]:
+        if value == label_arr[option]:
             temp_list[option] = 1
         else:
             temp_list[option] = 0
@@ -224,12 +232,12 @@ def encode_event_cause_options(value):
 
 # Target the specific index value inside the label array, within the array of
 # incident ID, [hex_vals], [label option] --> This retrieves event cause labels
-def get_event_cause_val():
-    index_val = 0
+def get_encoded_label_value(label_arr, label_index_pos):
+    index_val = label_index_pos
     option_list = get_label_options()
     result_list = []
     for values in option_list:
-        result_list.append(encode_event_cause_options(values[index_val]))
+        result_list.append(encode_labels(label_arr, values[index_val]))
     return result_list
 
 
@@ -248,3 +256,13 @@ def convert_array_to_np_array(input_data):
     numpy_array = np.array(input_data)
     numpy_array = numpy_array.astype(int)
     return numpy_array
+
+
+# write_to_file(get_encoded_label_value(event_cause_vals, 0), 'event_cause_vals.txt')
+# write_to_file(get_encoded_label_value(detection_method, 1), 'detection.txt')
+# write_to_file(get_encoded_label_value(restore_method, 2), 'restore.txt')
+# write_to_file(get_encoded_label_value(fix_classification, 3), 'fix_classification.txt')
+# write_to_file(get_encoded_label_value(subsystem, 4), 'subsystem.txt')
+# write_to_file(get_encoded_label_value(relevance, 5), 'relevance.txt')
+# write_to_file(remove_tickets_without_labels(create_id_label_feature_list()),
+#              'master_list.txt')
