@@ -9,7 +9,7 @@ detection_method = ['Polling', 'Trap', 'Call in/Email', 'GD Initiated']
 restore_method = ['GD Field Fix', 'CCC Fix', 'Non-GD Fix', 'Auto Fix',
                   'Not Applicable']
 fix_classification = ['HW Replaced', 'Configuration', 'HW Serviced/Reset',
-                      'SW Restart', 'Not Applicable']
+                      'SW Restart', 'Not Applicable', 'Undetermined']
 subsystem = ['Network', 'DF LOBs & Caller Position', 'Workstation/Server HW',
              'DSC & V4 HW/SW', 'RF Hardware', 'Infrastructure', 'Peripherals',
              'Encrypted Comms', 'Archive Subsystem', 'CG IA', 'No Subsystem']
@@ -211,8 +211,8 @@ def get_label_options():
     ticket_arr = remove_tickets_without_labels(invalid_ticket_arr)
     result_list = []
     for values in ticket_arr:
-        hex_vals = values[2]
-        result_list.append(hex_vals)
+        label_vals = values[2]
+        result_list.append(label_vals)
     return result_list
 
 
@@ -256,13 +256,3 @@ def convert_array_to_np_array(input_data):
     numpy_array = np.array(input_data)
     numpy_array = numpy_array.astype(int)
     return numpy_array
-
-
-# write_to_file(get_encoded_label_value(event_cause_vals, 0), 'event_cause_vals.txt')
-# write_to_file(get_encoded_label_value(detection_method, 1), 'detection.txt')
-# write_to_file(get_encoded_label_value(restore_method, 2), 'restore.txt')
-# write_to_file(get_encoded_label_value(fix_classification, 3), 'fix_classification.txt')
-# write_to_file(get_encoded_label_value(subsystem, 4), 'subsystem.txt')
-# write_to_file(get_encoded_label_value(relevance, 5), 'relevance.txt')
-# write_to_file(remove_tickets_without_labels(create_id_label_feature_list()),
-#              'master_list.txt')
