@@ -5,6 +5,7 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from learning_model import get_compiled_model
+from data_processing import convert_array_to_np_array, encode_hex_values
 
 
 # training model
@@ -46,16 +47,15 @@ def classify_data(alarm_data, classification_label_data, filepath,
     print("Train Evaluation: " + str(train_results))
 
 
-'''
+def validation(prediction_list, result_array, input_hex, filename):
+    '''
     TODO: Convert this to doc string
     result.csv contains corresp. hex code,
     the correct classification (Actual),
     predicition (result) and if the
     prediction was correct (Correctly Classified)
-'''
+    '''
 
-
-def validation(prediction_list, result_array, input_hex, filename):
     with open(filename, mode='w') as csv_file:
         fieldnames = ['Hex Code', 'Actual',
                       'Result', 'Correctly Classified']
@@ -97,3 +97,53 @@ def validation(prediction_list, result_array, input_hex, filename):
         csv_file.close()
 
     return true_counter / length_of_array
+
+
+def report_prediction_results(predicted_arr, label_arr, classification,
+                              filename):
+    '''
+    This function will take in a data set and provide the labels for the
+    maximum confidence label index value. This will report the results as an
+    array of values similar to the content of the ticket data file
+    '''
+    with open(filename, mode='w') as csv_file:
+        fieldnames = [classification]
+
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        length_of_array = len(predicted_arr)
+        num_of_vals = len(predicted_arr[0])
+
+        # loops through rows
+        for rows in range(length_of_array):
+            greatest_percent = max(predicted_arr[rows])
+            position = 0
+
+            # gets the index of largest confidence value
+            for index in range(num_of_vals):
+                if predicted_arr[rows][index] == greatest_percent:
+                    position = index
+
+            writer.writerow({classification: label_arr[position]})
+        csv_file.close()
+
+
+def convert_test_data(filname):
+    test_alarm_values = []
+    with open('TestAlarms10.csv', encoding='utf8') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)
+        for row in reader:
+            test_alarm_values.append(row[3])
+
+    # print(test_alarm_values)
+    result_list = []
+    for item in test_alarm_values:
+        encoded_alarm = encode_hex_values(item)
+        result_list.append(encoded_alarm)
+
+    # test_alarm_values = encode_hex_values(test_alarm_values)
+    # print(test_alarm_values)
+    return convert_array_to_np_array(result_list)
