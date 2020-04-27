@@ -3,21 +3,20 @@ from keras.layers import Dense, Dropout
 from keras.models import Sequential
 
 
-def get_compiled_model():
+def get_compiled_model(input_dimension, input_num, dropout, output):
     # ##################### LAYERS ####################### #
     model = Sequential()
     # ##################### INPUT  ####################### #
-
-    model.add(Dense(110,
-                    input_dim=101,
+    model.add(Dense(input_num,
+                    input_dim=input_dimension,
                     activation='relu',
                     kernel_initializer='normal'))
 
     # ##################### HIDDEN ####################### #
-    model.add(Dropout(0.8))
+    model.add(Dropout(dropout))
 
     # ##################### OUTPUT ####################### #
-    model.add(Dense(9, activation='softmax', kernel_initializer='normal'))
+    model.add(Dense(output, activation='softmax', kernel_initializer='normal'))
 
     # #################### SUMMARY ###################### #
     model.summary()
@@ -30,7 +29,7 @@ def get_compiled_model():
 
 
 # Store the state of the learning model in the following hdf5 file
-def prediction(test_input):
-    modelpath = "./models/event_cause_weights.hdf5"
+def prediction(test_input, filename):
+    modelpath = './models/' + filename
     model = tf.keras.models.load_model(modelpath)
     return model.predict(test_input)

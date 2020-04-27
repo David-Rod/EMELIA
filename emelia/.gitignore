@@ -1,4 +1,8 @@
 # Remove __pycache__ files
 __pycache__/
+
 # Remove .csv from python
 .csv
+
+# Ignore text files
+.txt
