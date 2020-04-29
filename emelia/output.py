@@ -30,7 +30,7 @@ def main():
     relevance_options = convert_array_to_np_array(
                             get_encoded_label_value(relevance, 5))
 
-# ########################## Train on Data ####################################
+    # ########################## Train on Data ################################
     # training & saving the model for each of the labels
     classify_data(encoded_hex_codes, event_cause_options,
                   'event_cause.hdf5', 101, 110,
@@ -56,7 +56,7 @@ def main():
                   'relevance.hdf5', 101, 110,
                   0.80, len(relevance))
 
-# ######################## Generate Predictions ###############################
+    # ######################## Generate Predictions ###########################
     # 20 percent that needs to be tested for alarm hex and all labels
     predict_input_hex = encoded_hex_codes[2132:]
     predict_event_cause = event_cause_options[2132:]
@@ -82,7 +82,7 @@ def main():
 
     relevance_prediction = prediction(predict_input_hex, 'relevance.hdf5')
 
-# ############################ Validate Predictions ###########################
+    # ############################ Validate Predictions #######################
     # Validation calls for all labels using the prediction function returns
     validation(predict_event_cause,
                event_cause_prediction,
@@ -114,9 +114,7 @@ def main():
                predict_input_hex,
                'relevance_predictions.txt')
 
-
-# ######################### TESTS REAL TICKETS ################################
-
+    # ######################### TESTS REAL TICKETS ############################
     # Convert the alarm data to encoded np arrays
     result_alarm_np = convert_test_data('TestAlarms10.csv')
 
@@ -142,7 +140,6 @@ def main():
                               'SUB_Predictions.txt')
     report_prediction_results(test_REL, relevance, 'Relevance',
                               'REL_Predictions.txt')
-
     # End timer & total runtime
     end_time = time.time()
     runtime = round(end_time - start_time, 2)
