@@ -1,13 +1,13 @@
 import time
+import pandas as pd
+
 from learning_model import prediction
-from classify_tickets import (classify_data, validation,
-                              report_prediction_results,
-                              convert_test_data)
+from classify_tickets import (classify_data, validation, convert_test_data,
+                              report_prediction_results, report_ticket_id)
 from data_processing import (detection_method, event_cause_vals,
                              fix_classification, restore_method, relevance,
-                             subsystem, encode_ticket_hex_codes,
-                             get_encoded_label_value,
-                             convert_array_to_np_array)
+                             subsystem, convert_array_to_np_array,
+                             encode_ticket_hex_codes, get_encoded_label_value)
 
 
 def main():
@@ -56,7 +56,7 @@ def main():
                   'relevance.hdf5', 101, 110,
                   0.80, len(relevance))
 
-    # ######################## Generate Predictions ###########################
+    # ################# Generate Training Data Predictions ####################
     # 20 percent that needs to be tested for alarm hex and all labels
     predict_input_hex = encoded_hex_codes[2132:]
     predict_event_cause = event_cause_options[2132:]
@@ -82,7 +82,7 @@ def main():
 
     relevance_prediction = prediction(predict_input_hex, 'relevance.hdf5')
 
-    # ############################ Validate Predictions #######################
+    # ################# Validate Training Data Predictions ####################
     # Validation calls for all labels using the prediction function returns
     validation(predict_event_cause,
                event_cause_prediction,
@@ -114,9 +114,12 @@ def main():
                predict_input_hex,
                'relevance_predictions.txt')
 
-    # ######################### TESTS REAL TICKETS ############################
+    # ##################### Test Real Ticket Alarm Data #######################
     # Convert the alarm data to encoded np arrays
     result_alarm_np = convert_test_data('TestAlarms10.csv')
+
+    # Function that stores array of all ticket ID values in the alarm file
+    ticket_id = report_ticket_id('TestAlarms10.csv')
 
     # create prediction arrays using the input data from result_alarm_np
     test_EV = prediction(result_alarm_np, 'event_cause.hdf5')
@@ -128,18 +131,21 @@ def main():
 
     # Report the label under each classification and store the result in the
     # corresponding file. The order is the same as the alarm data order
-    report_prediction_results(test_EV, event_cause_vals, 'Event Cause',
-                              'EC_Predictions.txt')
-    report_prediction_results(test_DM, detection_method, 'Detection Method',
-                              'DM_Predictions.txt')
-    report_prediction_results(test_RM, restore_method, 'Restore Method',
-                              'RM_Predictions.txt')
-    report_prediction_results(test_FC, fix_classification,
-                              'Fix Classification', 'FC_Predictions.txt')
-    report_prediction_results(test_SUB, subsystem, 'Subsystem',
-                              'SUB_Predictions.txt')
-    report_prediction_results(test_REL, relevance, 'Relevance',
-                              'REL_Predictions.txt')
+    ev = report_prediction_results(test_EV, event_cause_vals)
+    dm = report_prediction_results(test_DM, detection_method)
+    rm = report_prediction_results(test_RM, restore_method)
+    fc = report_prediction_results(test_FC, fix_classification)
+    sub = report_prediction_results(test_SUB, subsystem)
+    rel = report_prediction_results(test_REL, relevance)
+
+    # Converts all of the arrays to a pandas dataframe to be written to single
+    # output file
+    df = pd.DataFrame({'TICKET ID': ticket_id, 'EVENT CAUSE': ev,
+                       'DETECTION METHOD': dm, 'RESTORE METHOD': rm,
+                       'FIX CLASSIFICATION': fc, 'SUBSYSTEM': sub,
+                       'RELEVANCE': rel})
+    df.to_csv("Predictions.csv", index=False)
+
     # End timer & total runtime
     end_time = time.time()
     runtime = round(end_time - start_time, 2)

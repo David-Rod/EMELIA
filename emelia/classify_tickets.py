@@ -47,6 +47,64 @@ def classify_data(alarm_data, classification_label_data, filepath,
     print("Train Evaluation: " + str(train_results))
 
 
+def convert_test_data(filname):
+    test_alarm_values = []
+    with open('TestAlarms10.csv', encoding='utf8') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)
+        for row in reader:
+            test_alarm_values.append(row[3])
+
+    # print(test_alarm_values)
+    result_list = []
+    for item in test_alarm_values:
+        encoded_alarm = encode_hex_values(item)
+        result_list.append(encoded_alarm)
+
+    # test_alarm_values = encode_hex_values(test_alarm_values)
+    # print(test_alarm_values)
+    return convert_array_to_np_array(result_list)
+
+
+def report_prediction_results(predicted_arr, label_arr):
+    '''
+    This function will take in a data set and provide the labels for the
+    maximum confidence label index value. This will report the results as an
+    array of values similar to the content of the ticket data file
+    '''
+    result_arr = []
+
+    length_of_array = len(predicted_arr)
+    num_of_vals = len(predicted_arr[0])
+
+    # loops through rows
+    for rows in range(length_of_array):
+        greatest_percent = max(predicted_arr[rows])
+        position = 0
+
+        # gets the index of largest confidence value
+        for index in range(num_of_vals):
+            if predicted_arr[rows][index] == greatest_percent:
+                position = index
+
+        result_arr.append(label_arr[position])
+
+    return result_arr
+
+
+def report_ticket_id(filename):
+    result_arr = []
+
+    with open(filename, encoding='utf8') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        # Skip first row in the file
+        next(csv_reader)
+        for row in csv_reader:
+            result_arr.append(row[0])
+
+    return result_arr
+
+
 def validation(prediction_list, result_array, input_hex, filename):
     '''
     TODO: Convert this to doc string
@@ -97,53 +155,3 @@ def validation(prediction_list, result_array, input_hex, filename):
         csv_file.close()
 
     return true_counter / length_of_array
-
-
-def report_prediction_results(predicted_arr, label_arr, classification,
-                              filename):
-    '''
-    This function will take in a data set and provide the labels for the
-    maximum confidence label index value. This will report the results as an
-    array of values similar to the content of the ticket data file
-    '''
-    with open(filename, mode='w') as csv_file:
-        fieldnames = [classification]
-
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
-        writer.writeheader()
-
-        length_of_array = len(predicted_arr)
-        num_of_vals = len(predicted_arr[0])
-
-        # loops through rows
-        for rows in range(length_of_array):
-            greatest_percent = max(predicted_arr[rows])
-            position = 0
-
-            # gets the index of largest confidence value
-            for index in range(num_of_vals):
-                if predicted_arr[rows][index] == greatest_percent:
-                    position = index
-
-            writer.writerow({classification: label_arr[position]})
-        csv_file.close()
-
-
-def convert_test_data(filname):
-    test_alarm_values = []
-    with open('TestAlarms10.csv', encoding='utf8') as csv_file:
-        reader = csv.reader(csv_file)
-        next(reader)
-        for row in reader:
-            test_alarm_values.append(row[3])
-
-    # print(test_alarm_values)
-    result_list = []
-    for item in test_alarm_values:
-        encoded_alarm = encode_hex_values(item)
-        result_list.append(encoded_alarm)
-
-    # test_alarm_values = encode_hex_values(test_alarm_values)
-    # print(test_alarm_values)
-    return convert_array_to_np_array(result_list)
