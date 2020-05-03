@@ -1,88 +1,158 @@
 import time
-import csv
-import numpy as np
+import pandas as pd
+
 from learning_model import prediction
-from classify_tickets import classify_data
-from data_processing import (encode_ticket_hex_codes,
-                             get_event_cause_val,
-                             convert_array_to_np_array)
+from classify_tickets import (classify_data, validation, convert_test_data,
+                              report_prediction_results, report_ticket_id)
+from data_processing import (detection_method, event_cause_vals,
+                             fix_classification, restore_method, relevance,
+                             subsystem, convert_array_to_np_array,
+                             encode_ticket_hex_codes, get_encoded_label_value)
 
 
 def main():
     # starting timer
     start_time = time.time()
 
-    # converting lists to numpy array
+    # converting lists to numpy array, the number specifies the index in the
+    # array of associated label values
     encoded_hex_codes = convert_array_to_np_array(encode_ticket_hex_codes())
-    event_cause_options = convert_array_to_np_array(get_event_cause_val())
+    event_cause_options = convert_array_to_np_array(
+                            get_encoded_label_value(event_cause_vals, 0))
+    detection_method_options = convert_array_to_np_array(
+                            get_encoded_label_value(detection_method, 1))
+    restore_method_options = convert_array_to_np_array(
+                                get_encoded_label_value(restore_method, 2))
+    fix_classification_options = convert_array_to_np_array(
+                                get_encoded_label_value(fix_classification, 3))
+    subsystem_options = convert_array_to_np_array(
+                            get_encoded_label_value(subsystem, 4))
+    relevance_options = convert_array_to_np_array(
+                            get_encoded_label_value(relevance, 5))
 
-    # training & saving the model
-    classify_data(encoded_hex_codes,
-                  event_cause_options,
-                  'event_cause_weights.hdf5')
+    # ########################## Train on Data ################################
+    # training & saving the model for each of the labels
+    classify_data(encoded_hex_codes, event_cause_options,
+                  'event_cause.hdf5', 101, 110,
+                  0.80, len(event_cause_vals))
 
-    # 20 percent that needs to be tested
+    classify_data(encoded_hex_codes, detection_method_options,
+                  'detection_method.hdf5', 101, 110,
+                  0.80, len(detection_method))
+
+    classify_data(encoded_hex_codes, restore_method_options,
+                  'restore_method.hdf5', 101, 110,
+                  0.80, len(restore_method))
+
+    classify_data(encoded_hex_codes, fix_classification_options,
+                  'fix_classification.hdf5', 101, 110,
+                  0.80, len(fix_classification))
+
+    classify_data(encoded_hex_codes, subsystem_options,
+                  'subsystem.hdf5', 101, 110,
+                  0.80, len(subsystem))
+
+    classify_data(encoded_hex_codes, relevance_options,
+                  'relevance.hdf5', 101, 110,
+                  0.80, len(relevance))
+
+    # ################# Generate Training Data Predictions ####################
+    # 20 percent that needs to be tested for alarm hex and all labels
     predict_input_hex = encoded_hex_codes[2132:]
-    predict_actual = event_cause_options[2132:]
+    predict_event_cause = event_cause_options[2132:]
+    predict_detection_method = detection_method_options[2132:]
+    predict_restore_method = restore_method_options[2132:]
+    predict_fix_classification = fix_classification_options[2132:]
+    predict_subsystem = subsystem_options[2132:]
+    predict_relevance = relevance_options[2132:]
 
     # calling prediction from predict.py and returns array of confidence values
-    result_array = prediction(predict_input_hex)
+    event_cause_prediction = prediction(predict_input_hex, 'event_cause.hdf5')
 
-    '''result.csv contains corresp. hex code,
-    the correct classification (Actual),
-    predicition (result) and if the
-    prediction was correct (Correctly Classified)
-    '''
-    with open('result.csv', mode='w') as csv_file:
-        fieldnames = ['Hex Code', 'Actual', 'Result', 'Correctly Classified']
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+    detection_method_prediction = prediction(predict_input_hex,
+                                             'detection_method.hdf5')
 
-        writer.writeheader()
+    restore_method_prediction = prediction(predict_input_hex,
+                                           'restore_method.hdf5')
 
-        # Converting np arrays to lists
-        predict_actual = np.array(predict_actual).tolist()
-        result_array = np.array(result_array).tolist()
+    fix_classification_prediction = prediction(predict_input_hex,
+                                               'fix_classification.hdf5')
 
-        length_of_array = len(predict_input_hex)  # 533 values from 2132-2665
-        num_of_vals = len(predict_actual[0])  # 9 values for the assoc label
-        true_counter = 0
-        # loops through rows
-        for rows in range(length_of_array):
-            greatest_percent = max(result_array[rows])
-            boolean = False
-            position = 0
+    subsystem_prediction = prediction(predict_input_hex, 'subsystem.hdf5')
 
-            # gets the index of largest confidence value
-            for index in range(num_of_vals):
-                if result_array[rows][index] == greatest_percent:
-                    position = index
+    relevance_prediction = prediction(predict_input_hex, 'relevance.hdf5')
 
-            # if the index of largest confidence value equals the index of
-            # actual classification
-            for index in range(num_of_vals):
-                if predict_actual[rows][index] == 1 and index == position:
-                    boolean = True
-                    true_counter += 1
+    # ################# Validate Training Data Predictions ####################
+    # Validation calls for all labels using the prediction function returns
+    validation(predict_event_cause,
+               event_cause_prediction,
+               predict_input_hex,
+               'event_cause_predictions.txt')
 
-            writer.writerow({'Hex Code': predict_input_hex[rows],
-                             'Actual': predict_actual[rows],
-                             'Result': result_array[rows],
-                             'Correctly Classified': boolean})
-        csv_file.close()
+    validation(predict_detection_method,
+               detection_method_prediction,
+               predict_input_hex,
+               'detection_method_predictions.txt')
 
-    # end timer
+    validation(predict_restore_method,
+               restore_method_prediction,
+               predict_input_hex,
+               'restore_method_predictions.txt')
+
+    validation(predict_fix_classification,
+               fix_classification_prediction,
+               predict_input_hex,
+               'fix_classication_predictions.txt')
+
+    validation(predict_subsystem,
+               subsystem_prediction,
+               predict_input_hex,
+               'subsystem_predictions.txt')
+
+    validation(predict_relevance,
+               relevance_prediction,
+               predict_input_hex,
+               'relevance_predictions.txt')
+
+    # ##################### Test Real Ticket Alarm Data #######################
+    # Convert the alarm data to encoded np arrays
+    result_alarm_np = convert_test_data('TestAlarms10.csv')
+
+    # Function that stores array of all ticket ID values in the alarm file
+    ticket_id = report_ticket_id('TestAlarms10.csv')
+
+    # create prediction arrays using the input data from result_alarm_np
+    test_EV = prediction(result_alarm_np, 'event_cause.hdf5')
+    test_DM = prediction(result_alarm_np, 'detection_method.hdf5')
+    test_RM = prediction(result_alarm_np, 'restore_method.hdf5')
+    test_FC = prediction(result_alarm_np, 'fix_classification.hdf5')
+    test_SUB = prediction(result_alarm_np, 'subsystem.hdf5')
+    test_REL = prediction(result_alarm_np, 'relevance.hdf5')
+
+    # Report the label under each classification and store the result in the
+    # corresponding file. The order is the same as the alarm data order
+    ev = report_prediction_results(test_EV, event_cause_vals)
+    dm = report_prediction_results(test_DM, detection_method)
+    rm = report_prediction_results(test_RM, restore_method)
+    fc = report_prediction_results(test_FC, fix_classification)
+    sub = report_prediction_results(test_SUB, subsystem)
+    rel = report_prediction_results(test_REL, relevance)
+
+    # Converts all of the arrays to a pandas dataframe to be written to single
+    # output file
+    df = pd.DataFrame({'TICKET ID': ticket_id, 'EVENT CAUSE': ev,
+                       'DETECTION METHOD': dm, 'RESTORE METHOD': rm,
+                       'FIX CLASSIFICATION': fc, 'SUBSYSTEM': sub,
+                       'RELEVANCE': rel})
+    df.to_csv("Predictions.csv", index=False)
+
+    # End timer & total runtime
     end_time = time.time()
-
-    # run time
     runtime = round(end_time - start_time, 2)
-    avg_time_per_ticket = round(runtime / 2665, 5)
 
     print("\n" * 2)
     print("############################# METRICS ############################")
     print("Runtime: " + str(runtime) + "s")
-    print("Average Time per Ticket: " + str(avg_time_per_ticket) + "s")
-    print("Accuracy of system for test tickets - event cause label:  "
-          + str(true_counter / length_of_array))
 
 
 if __name__ == "__main__":

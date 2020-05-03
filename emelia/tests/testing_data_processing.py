@@ -94,7 +94,7 @@ class MyTest(unittest.TestCase):
 
         incident_id_master_set = data_processing.make_alarm_hex_master_set()
 
-        # check length 
+        # check length
         self.assertEqual(23, len(incident_id_master_set))
 
         # check exsitance 1
@@ -107,14 +107,14 @@ class MyTest(unittest.TestCase):
         self.assertFalse('STATION - RIO VISTA' in incident_id_master_set)
 
     def test_get_associated_hex_vals(self):
-        
+
         # normal case
         self.assertEqual(['844959', ['30914']],data_processing.get_associated_hex_vals(844959))
         # NULL case
         self.assertEqual(['24', []],data_processing.get_associated_hex_vals(24))
 
     def test_create_id_label_feature_list(self):
-        
+
         id_label_feature_list = data_processing.create_id_label_feature_list()
 
         self.assertFalse([] == id_label_feature_list)
@@ -123,7 +123,7 @@ class MyTest(unittest.TestCase):
 
         ticket_data_list = data_processing.create_ticket_data_list()
 
-        # check length 
+        # check length
         self.assertEqual(49, len(ticket_data_list))
 
         ticket_data_list_rff = set(map(lambda x:x[3], ticket_data_list))
@@ -150,7 +150,7 @@ class MyTest(unittest.TestCase):
         self.assertFalse([] == label_options)
 
     def test_encode_event_cause_options(self):
-        
+
         encoded_event_cause_options_0 = data_processing.encode_event_cause_options('Random System Fault')
 
         # check place 0
@@ -161,9 +161,9 @@ class MyTest(unittest.TestCase):
         # check place 3
         self.assertEqual([0, 0, 0, 1, 0, 0, 0, 0, 0],  encoded_event_cause_options_3)
 
-    def test_get_event_cause_val(self):
+    def test_get_encoded_label_value(self):
 
-        event_cause_val = data_processing.get_event_cause_val()
+        event_cause_val = data_processing.get_encoded_label_value()
 
         self.assertFalse([] == event_cause_val)
 
