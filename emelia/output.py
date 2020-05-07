@@ -26,21 +26,22 @@ def main():
                 print("HELP:")
                 print("Please choose the operation needed to be performed by "
                       "the system.\nCommands should be followed by the "
-                      "files to be used (if needed).")
+                      "files to be used.")
+                print("\n")
                 print("Commands to be passed:")
-                print("\n" * 2)
+                print("\n")
                 print("TO CLASSIFY ONLY:")
                 print("python <file name> --Classify "
-                      "<CSV Alarm File Name> <CSV Ticket File Name>"
+                      "<CSV Alarm File Name> <CSV Ticket File Name> "
                       "<CSV Test Alarm File Name> <CSV Prediction File Name>")
-                print("\n" * 2)
+                print("\n")
                 print("TO TRAIN ONLY:")
                 print("python <file name> --Train <CSV Alarm File Name> "
                       "<CSV Ticket File Name>")
-                print("\n" * 2)
+                print("\n")
                 print("TO CLASSIFY AND TRAIN:")
                 print("python <file name> --Both "
-                      "<CSV Alarm File Name> <CSV Ticket File Name>"
+                      "<CSV Alarm File Name> <CSV Ticket File Name> "
                       "<CSV Test Alarm File Name> <CSV Prediction File Name>")
 
             elif currentArgument in ("-c", "--Classify"):
