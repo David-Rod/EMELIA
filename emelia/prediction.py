@@ -3,21 +3,12 @@ import pandas as pd
 
 from classify_tickets import (convert_test_data, report_prediction_results,
                               report_ticket_id)
-'''
-from data_processing import (detection_method, event_cause_vals,
-                             fix_classification, restore_method, relevance,
-                             subsystem)
-'''
 from data_processing import DataProcessor as dp
 from learning_model import prediction
 from progress import run_progress_bar
 
 
-# def generate_predictions(test_file, prediction_file):
-def generate_predictions(test_file, alarm_file, ticket_file, prediction_file):
-
-    # dp = DataProcessor(alarm_file, ticket_file)
-
+def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
     # Convert the alarm data to encoded np arrays
     result_alarm_np = convert_test_data(test_file, alarm_file, ticket_file)
 
@@ -58,4 +49,5 @@ def generate_predictions(test_file, alarm_file, ticket_file, prediction_file):
                        'RELEVANCE': rel})
     df.to_csv(prediction_file, index=False)
 
+    # Join thread
     thread.join()

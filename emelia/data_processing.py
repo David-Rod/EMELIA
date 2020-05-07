@@ -10,20 +10,21 @@ class DataProcessor:
                         'Informational', 'Documentation']
     detection_method = ['Polling', 'Trap', 'Call in/Email', 'GD Initiated']
     restore_method = ['GD Field Fix', 'CCC Fix', 'Non-GD Fix', 'Auto Fix',
-                    'Not Applicable']
+                      'Not Applicable']
     fix_classification = ['HW Replaced', 'Configuration', 'HW Serviced/Reset',
-                        'SW Restart', 'Not Applicable', 'Undetermined']
-    subsystem = ['Network', 'DF LOBs & Caller Position', 'Workstation/Server HW',
-                'DSC & V4 HW/SW', 'RF Hardware', 'Infrastructure', 'Peripherals',
-                'Encrypted Comms', 'Archive Subsystem', 'CG IA', 'No Subsystem']
+                          'SW Restart', 'Not Applicable', 'Undetermined']
+    subsystem = ['Network', 'DF LOBs & Caller Position',
+                 'Workstation/Server HW', 'DSC & V4 HW/SW', 'RF Hardware',
+                 'Infrastructure', 'Peripherals', 'Encrypted Comms',
+                 'Archive Subsystem', 'CG IA', 'No Subsystem']
     relevance = ['Equipment', 'Coast Guard', 'Disaster']
 
     def __init__(self, alarm_file, ticket_file):
         self.alarm_file = alarm_file
         self.ticket_file = ticket_file
 
-    # This function iterates through the alarm data to create a master set of alarm
-    # code values. This set will be used as input for the NN
+    # This function iterates through the alarm data to create a master set of
+    # alarm code values. This set will be used as input for the NN
     def make_alarm_hex_master_set(self):
         alarm_hex_master = set()
 
@@ -37,8 +38,8 @@ class DataProcessor:
 
         return sorted(alarm_hex_master)
 
-    # This function iterates through the ticket data file to create set of incident
-    # ID values that will be used to get corresponding hex values
+    # This function iterates through the ticket data file to create set of
+    # incident ID values that will be used to get corresponding hex values
     def make_incident_id_master_set(self):
         incident_id_master = set()
 
@@ -68,9 +69,9 @@ class DataProcessor:
 
         return sorted(result_set)
 
-    # Function will iterate through the set of incident ID's in the alarm file and
-    # the incident ID's in the ticket file. If there is a match, it is added to the
-    # set. The set is a union of ID's in both files
+    # Function will iterate through the set of incident ID's in the alarm file
+    # and the incident ID's in the ticket file. If there is a match, it is
+    # added to the set. The set is a union of ID's in both files
     def get_id_hex_set(self):
         result_set = set()
         ticket_id_set = self.make_incident_id_master_set()
@@ -81,8 +82,8 @@ class DataProcessor:
                     result_set.add(str(item))
         return sorted(result_set)
 
-    # Function associates all related alarm values for an incident ID. Store the
-    # result in a list
+    # Function associates all related alarm values for an incident ID. Store
+    # the result in a list
     def get_associated_hex_vals(self, id_val):
         id_and_hex_list = []
         id_and_hex_list.append(str(id_val))
@@ -122,10 +123,10 @@ class DataProcessor:
         if null_counter == 0:
             return row_values
 
-    # Function iterates through the ticket data in a given csv file and stores the
-    # ticket data in an array. If the row_value is None, it will not add that data.
-    # This should still work for create_id_label_feeature_list(), since that func
-    # is dependent on the return from this function
+    # Function iterates through the ticket data in a given csv file and stores
+    # the ticket data in an array. If the row_value is None, it will not add
+    # that data. This should still work for create_id_label_feeature_list(),
+    # since that function is dependent on the return from this function
     def create_ticket_label_list(self):
         ticket_data = []
         with open('TicketData_003.csv', encoding='utf8') as csv_file:
@@ -160,8 +161,8 @@ class DataProcessor:
                 ticket_id_hex_label_arr.append(ticket)
         return ticket_id_hex_label_arr
 
-    # Gets the hex codes in the master array at index 1, and makes a result list
-    # that contains all of the hex values for each ticket
+    # Gets the hex codes in the master array at index 1, and makes a result
+    # list that contains all of the hex values for each ticket
     def get_hex_codes(self):
         ticket_arr = self.create_id_label_feature_list()
         valid_ticket_with_labels = \
@@ -173,9 +174,9 @@ class DataProcessor:
             result_list.append(hex_vals)
         return result_list
 
-    # This function will accept the array of values, from get_hex_codes, and return
-    # and array of 0 and 1 depending on the hex values present in the array. Length
-    # will be same as length of alarm master set
+    # This function will accept the array of values, from get_hex_codes, and
+    # return an array of 0 and 1 depending on the hex values present in the
+    # array. The length will be same as length of alarm master set
     def encode_hex_values(self, data_arr):
         hex_list = list(self.make_alarm_hex_master_set())
         list_len = len(hex_list)
@@ -186,9 +187,9 @@ class DataProcessor:
 
         return temp_list
 
-    # Iterates through each hex_arr in get_hex_codes and will encode the data as an
-    # array of 0 and 1 for each ticket, creates list the length of all alarm hex
-    # values that are encoded for each ticket shared between tables
+    # Iterates through each hex_arr in get_hex_codes and will encode the data
+    # as an array of 0 and 1 for each ticket, creates list the length of all
+    # alarm hex values that are encoded for each ticket shared between tables
     def encode_ticket_hex_codes(self):
         result_list = []
         for hex_arr in self.get_hex_codes():
@@ -196,9 +197,9 @@ class DataProcessor:
 
         return result_list
 
-    # Gets all of the values from the master array at index 2, and makes a result
-    # list that contains all of the label options for each ticket. The result is
-    # the list of options related to the shared tickets
+    # Gets all of the values from the master array at index 2, and makes a
+    # result list that contains all of the label options for each ticket. The
+    # result is the list of options related to the shared tickets
     def get_label_options(self):
         invalid_ticket_arr = self.create_id_label_feature_list()
         ticket_arr = self.remove_tickets_without_labels(invalid_ticket_arr)
@@ -221,8 +222,9 @@ class DataProcessor:
                 temp_list[option] = 0
         return temp_list
 
-    # Target the specific index value inside the label array, within the array of
-    # incident ID, [hex_vals], [label option] --> This retrieves event cause labels
+    # Target the specific index value inside the label array, within the array
+    # of incident ID, [hex_vals], [label option] --> This retrieves event cause
+    # labels
     def get_encoded_label_value(self, label_arr, label_index_pos):
         index_val = label_index_pos
         option_list = self.get_label_options()

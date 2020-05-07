@@ -1,15 +1,11 @@
 import time
 import sys
 import getopt
-# import inspect
-# from import filter
 
 from prediction import generate_predictions
 from train import train_and_validate
 
 
-
-# TODO: Implement click library
 def main():
     # starting timer
     start_time = time.time()
@@ -18,8 +14,8 @@ def main():
     print('\n')
 
     argumentList = sys.argv[1:]
-    options = 'hfct'
-    long_options = ['Help', 'File', 'Classify', 'Train']
+    options = 'hfctb'
+    long_options = ['Help', 'File', 'Classify', 'Train', 'Both']
     try:
         # Parsing argument
         arguments, values = getopt.getopt(argumentList, options, long_options)
@@ -32,63 +28,51 @@ def main():
                       "the system.\nCommands should be followed by the "
                       "files to be used (if needed).")
                 print("Commands to be passed:")
-
+                print("\n" * 2)
+                print("TO CLASSIFY ONLY:")
                 print("python <file name> --Classify "
-                      "<CSV Input Alarm File Name> <CSV Alarm File Name>"
-                      "<CSV Ticket File Name> <CSV Prediction File Name>")
+                      "<CSV Alarm File Name> <CSV Ticket File Name>"
+                      "<CSV Test Alarm File Name> <CSV Prediction File Name>")
+                print("\n" * 2)
+                print("TO TRAIN ONLY:")
                 print("python <file name> --Train <CSV Alarm File Name> "
                       "<CSV Ticket File Name>")
-
-            elif currentArgument in ("-f", "--File"):
-                print("Displaying File Name:", sys.argv[2])
+                print("\n" * 2)
+                print("TO CLASSIFY AND TRAIN:")
+                print("python <file name> --Both "
+                      "<CSV Alarm File Name> <CSV Ticket File Name>"
+                      "<CSV Test Alarm File Name> <CSV Prediction File Name>")
 
             elif currentArgument in ("-c", "--Classify"):
-                print(("Command: (% s)") % (currentValue))
+                print("STARTING CLASSIFICATION")
                 generate_predictions(sys.argv[2], sys.argv[3],
                                      sys.argv[4], sys.argv[5])
 
             elif currentArgument in ("-t", "--Train"):
-                print(("Command: (% s)") % (currentValue))
-                print("PROCESSING DATA...\n")
-                print("TRAINING WILL BEGIN AFTER DATA PROCESSING IS COMPLETE")
-                # DataProcessor(sys.argv[2], sys.argv[3])
-                '''
-                attrs = (getattr(data_processor, name)
-                         for name in dir(data_processor))
-                methods = filter(inspect.ismethod, attrs)
-                for method in methods:
-                    try:
-                        method()
-                    except TypeError:
-                        # Can't handle methods with required arguments.
-                        pass
-                '''
-                print("DATA PROCESSING IS COMPLETE.\n")
                 print("LEARNING MODEL WILL BEGIN TRAINING")
                 train_and_validate(sys.argv[2], sys.argv[3])
+
+            elif currentArgument in ("-b", "--Both"):
+                print("LEARNING MODEL WILL BEGIN TRAINING")
+                train_and_validate(sys.argv[2], sys.argv[3])
+                print("STARTING CLASSIFICATION")
+                generate_predictions(sys.argv[2], sys.argv[3],
+                                     sys.argv[4], sys.argv[5])
+
+            else:
+                raise ValueError("The input provided is not a valid option."
+                                 "Please select one of the options listed "
+                                 "in the HELP command.\nType python output.py "
+                                 "-h to see which commands are available.")
 
     except getopt.error as err:
         # output error, and return with an error code
         print(str(err))
 
-
-    '''
-    if command == 'train':
-        train_and_validate()
-
-    elif command == 'classify':
-        generate_predictions(file)
-
-    else:
-        train_and_validate()
-        generate_predictions()
-    '''
     # End timer & total runtime
     end_time = time.time()
     runtime = round(end_time - start_time, 2)
 
-    # print("\n" * 2)
-    # print("############################# METRICS ############################")
     print("Runtime: " + str(runtime) + "s")
 
 

@@ -2,19 +2,14 @@ import threading
 
 from learning_model import prediction
 from classify_tickets import classify_data, validation
-'''
-from data_processing import (detection_method, event_cause_vals,
-                             fix_classification, restore_method, relevance,
-                             subsystem, convert_array_to_np_array,
-                             encode_ticket_hex_codes, get_encoded_label_value)
-'''
 from data_processing import DataProcessor
 from progress import run_progress_bar
 
 
 def train_and_validate(alarm_file, ticket_file):
-
+    # Initialize DataProcessor object
     dp = DataProcessor(alarm_file, ticket_file)
+
     # Create thread to run progress bar
     thread = threading.Thread(target=run_progress_bar, args=(670,))
 
@@ -28,8 +23,7 @@ def train_and_validate(alarm_file, ticket_file):
     encoded_hex_codes = dp.convert_array_to_np_array(
         dp.encode_ticket_hex_codes())
     event_cause_options = dp.convert_array_to_np_array(
-        dp.get_encoded_label_value(dp.event_cause_vals,
-                                              0))
+        dp.get_encoded_label_value(dp.event_cause_vals, 0))
     detection_method_options = dp.convert_array_to_np_array(
                             dp.get_encoded_label_value(
                                 dp.detection_method, 1))
@@ -49,7 +43,7 @@ def train_and_validate(alarm_file, ticket_file):
     '''
     Train on Data
 
-    training & saving the model for each of the labels
+    Training & saving the model for each of the labels
     '''
 
     classify_data(encoded_hex_codes, event_cause_options,

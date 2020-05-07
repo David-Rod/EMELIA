@@ -5,20 +5,19 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from learning_model import get_compiled_model
-# from data_processing import convert_array_to_np_array, encode_hex_values
 from data_processing import DataProcessor
 
 
 def classify_data(alarm_data, classification_label_data, filepath,
                   input_dimension, input_num, dropout, output):
-    """
+    '''
     Trains on the data passed as input
 
     x_data is what is fed into the NN. This will be the encoded alarm
     values for each ticket.
 
     y_data are the encoded label values that correspond to each ticket.
-    """
+    '''
     x_data = alarm_data[:2132]
     y_data = classification_label_data[:2132]
 
@@ -35,7 +34,7 @@ def classify_data(alarm_data, classification_label_data, filepath,
                         epochs=20,
                         batch_size=20,
                         validation_data=(x_test, y_test),
-                        verbose=2)
+                        verbose=0)
 
     # saves the model in the filepath listed
     model.save('./models/' + filepath)
