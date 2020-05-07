@@ -1,6 +1,13 @@
+import os
 import tensorflow as tf
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
+
+# Ignore warnings regarding supported CPU instructions
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+# Set tensorflow logging to ignore warnings and report errors only
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 def get_compiled_model(input_dimension, input_num, dropout, output):
@@ -19,7 +26,7 @@ def get_compiled_model(input_dimension, input_num, dropout, output):
     model.add(Dense(output, activation='softmax', kernel_initializer='normal'))
 
     # #################### SUMMARY ###################### #
-    model.summary()
+    # model.summary()
 
     model.compile(optimizer='rmsprop',
                   loss='categorical_crossentropy',

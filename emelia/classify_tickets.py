@@ -5,18 +5,19 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 from learning_model import get_compiled_model
-from data_processing import convert_array_to_np_array, encode_hex_values
+from data_processing import DataProcessor
 
 
-# training model
 def classify_data(alarm_data, classification_label_data, filepath,
                   input_dimension, input_num, dropout, output):
-    """
-        x_data is what is fed into the NN. This will be the encoded alarm
-        values for each ticket.
+    '''
+    Trains on the data passed as input
 
-        y_data are the encoded label values that correspond to each ticket.
-    """
+    x_data is what is fed into the NN. This will be the encoded alarm
+    values for each ticket.
+
+    y_data are the encoded label values that correspond to each ticket.
+    '''
     x_data = alarm_data[:2132]
     y_data = classification_label_data[:2132]
 
@@ -33,7 +34,7 @@ def classify_data(alarm_data, classification_label_data, filepath,
                         epochs=20,
                         batch_size=20,
                         validation_data=(x_test, y_test),
-                        verbose=2)
+                        verbose=0)
 
     # saves the model in the filepath listed
     model.save('./models/' + filepath)
@@ -47,9 +48,10 @@ def classify_data(alarm_data, classification_label_data, filepath,
     print("Train Evaluation: " + str(train_results))
 
 
-def convert_test_data(filname):
+def convert_test_data(filename, alarm_file, ticket_file):
+    dp = DataProcessor(alarm_file, ticket_file)
     test_alarm_values = []
-    with open('TestAlarms10.csv', encoding='utf8') as csv_file:
+    with open(filename, encoding='utf8') as csv_file:
         reader = csv.reader(csv_file)
         next(reader)
         for row in reader:
@@ -58,12 +60,12 @@ def convert_test_data(filname):
     # print(test_alarm_values)
     result_list = []
     for item in test_alarm_values:
-        encoded_alarm = encode_hex_values(item)
+        encoded_alarm = dp.encode_hex_values(item)
         result_list.append(encoded_alarm)
 
     # test_alarm_values = encode_hex_values(test_alarm_values)
     # print(test_alarm_values)
-    return convert_array_to_np_array(result_list)
+    return dp.convert_array_to_np_array(result_list)
 
 
 def report_prediction_results(predicted_arr, label_arr):
