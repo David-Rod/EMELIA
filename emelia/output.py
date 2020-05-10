@@ -10,7 +10,7 @@ def main():
     # starting timer
     start_time = time.time()
     print('\n')
-    print('========================= Program Start ==========================')
+    print('========================= PROGRAM START ==========================')
     print('\n')
 
     argumentList = sys.argv[1:]
@@ -23,7 +23,7 @@ def main():
         for currentArgument, currentValue in arguments:
 
             if currentArgument in ("-h", "--Help"):
-                print("HELP:")
+                print("=================== START HELP TEXT ==================")
                 print("Please choose the operation needed to be performed by "
                       "the system.\nCommands should be followed by the "
                       "files to be used.")
@@ -31,18 +31,20 @@ def main():
                 print("Commands to be passed:")
                 print("\n")
                 print("TO CLASSIFY ONLY:")
-                print("python <file name> --Classify "
-                      "<CSV Alarm File Name> <CSV Ticket File Name> "
-                      "<CSV Test Alarm File Name> <CSV Prediction File Name>")
+                print("python <Filename> --Classify "
+                      "<CSV Alarm Filename> <CSV Ticket Filename> "
+                      "<CSV Test Alarm Filename> <CSV Prediction Filename>")
                 print("\n")
                 print("TO TRAIN ONLY:")
-                print("python <file name> --Train <CSV Alarm File Name> "
-                      "<CSV Ticket File Name>")
+                print("python <Filename> --Train <CSV Alarm Filename> "
+                      "<CSV Ticket Filename>")
                 print("\n")
                 print("TO CLASSIFY AND TRAIN:")
-                print("python <file name> --Both "
-                      "<CSV Alarm File Name> <CSV Ticket File Name> "
-                      "<CSV Test Alarm File Name> <CSV Prediction File Name>")
+                print("python <Filename> --Both "
+                      "<CSV Alarm Filename> <CSV Ticket Filename> "
+                      "<CSV Test Alarm Filename> <CSV Prediction Filename>")
+                print("\n")
+                print("==================== END HELP TEXT ===================")
 
             elif currentArgument in ("-c", "--Classify"):
                 print("STARTING CLASSIFICATION")
@@ -56,6 +58,7 @@ def main():
             elif currentArgument in ("-b", "--Both"):
                 print("LEARNING MODEL WILL BEGIN TRAINING")
                 train_and_validate(sys.argv[2], sys.argv[3])
+                print("\n")
                 print("STARTING CLASSIFICATION")
                 generate_predictions(sys.argv[2], sys.argv[3],
                                      sys.argv[4], sys.argv[5])
@@ -74,7 +77,8 @@ def main():
     end_time = time.time()
     runtime = round(end_time - start_time, 2)
 
-    print("Runtime: " + str(runtime) + "s")
+    print("\n")
+    print("RUNTIME: " + str(runtime) + "s")
 
 
 if __name__ == "__main__":
