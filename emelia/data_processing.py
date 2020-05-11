@@ -129,7 +129,7 @@ class DataProcessor:
     # since that function is dependent on the return from this function
     def create_ticket_label_list(self):
         ticket_data = []
-        with open('TicketData_003.csv', encoding='utf8') as csv_file:
+        with open(self.ticket_file, encoding='utf8') as csv_file:
             reader = csv.reader(csv_file)
             next(reader)
             for row in reader:
@@ -210,7 +210,6 @@ class DataProcessor:
         return result_list
 
     # encodes event cause and returns an array the length of event_cause_vals
-    # TODO: fix references to this function in the testing module
     def encode_labels(self, label_arr, value):
         list_len = len(label_arr)
         temp_list = self.zerolistmaker(list_len)
@@ -243,7 +242,7 @@ class DataProcessor:
             except Exception:
                 raise ValueError("Failed to write to file. File may be empty.")
 
-    # TODO: Make this function more generic to accept different input params
+    # Converts list of input data to numpy array of type int
     def convert_array_to_np_array(self, input_data):
         numpy_array = np.array(input_data)
         numpy_array = numpy_array.astype(int)
