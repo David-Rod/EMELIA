@@ -5,19 +5,22 @@ sys.path.append('../')
 # Importing should work if python within conda env is utilized, not machine
 from data_processing import DataProcessor
 
-# Use test ticket data files to initialize the class object
-dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
-
 
 class TestDataProcessing(unittest.TestCase):
 
     def test_get_associated_hex_vals(self):
+        # Use test ticket data files to initialize the class object
+        dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+
         obs = dp.get_associated_hex_vals('1076556')
 
         self.assertFalse([], obs)
         self.assertIn('0x47E060D', obs[1])
 
     def test_list_creation(self):
+        # Use test ticket data files to initialize the class object
+        dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+
         list_of_alarms = dp.make_alarm_hex_master_set()
         list_of_ids = dp.make_incident_id_master_set()
 
@@ -33,6 +36,9 @@ class TestDataProcessing(unittest.TestCase):
         self.assertIsInstance(list_of_ids, list)
 
     def test_get_id_hex_set(self):
+        # Use test ticket data files to initialize the class object
+        dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+
         obs = dp.get_alarm_file_incident_ids()
         exp = ['1076535', '1076543', '1076544', '1076548', '1076552',
                '1076553', '1076554', '1076555', '1076556']
@@ -45,6 +51,9 @@ class TestDataProcessing(unittest.TestCase):
         self.assertIsInstance(obs, list)
 
     def test_remove_tickets_without_labels(self):
+        # Use test ticket data files to initialize the class object
+        dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+
         id_label_feature_list = dp.create_id_label_feature_list()
         obs = dp.remove_tickets_without_labels(id_label_feature_list)
 
@@ -56,7 +65,9 @@ class TestDataProcessing(unittest.TestCase):
         self.assertIn('Network Fault', obs[0][2])
 
     def test_encode_hex_values(self):
+        # Use test ticket data files to initialize the class object
         dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+
         id_label_feature_list = dp.get_hex_codes()
 
         obs = dp.encode_hex_values(id_label_feature_list[4])
