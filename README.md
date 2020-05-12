@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/David-Rod/EMELIA/blob/master/images/blackLogo.png">
+</p>
+
 # Event-Driven Machine Learning Intelligent Assessor (EMELIA)
 
 ## Quick Start
@@ -111,7 +115,11 @@ processing to output of the data.
 
 Overview of the Architecture:
 
+<p align="center">
+  <img width="750px" height="1000px" src="https://github.com/David-Rod/EMELIA/blob/master/images/Architecture_Design.png">
+</p>
 
+---
 #### 1. Data Processing
 
 ***Component Responsibilities***
