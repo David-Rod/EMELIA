@@ -20,6 +20,10 @@
 #### 4. Help
 `python <Filename> --Help`
 
+**Note:**
+
+Files containing alarm data and ticket data are required. Please acquire these files from General Dynamics personnel prior to attempting to run this program. 
+
 ## Overview
 The development of this product was inspired by the U.S Coast Guard and General Dynamics
 partnership program, Rescue 21. Together these two parties have created an advanced command,
