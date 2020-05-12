@@ -55,6 +55,7 @@ class DataProcessor:
     # Returns list of 0's that has a length of n
     def zerolistmaker(self, n):
         listofzeros = [0] * n
+
         return listofzeros
 
     # Function that creates a set of the incident ID's in the alarm file
@@ -80,6 +81,7 @@ class DataProcessor:
             for value in incident_id_in_alarm_file:
                 if item == value:
                     result_set.add(str(item))
+
         return sorted(result_set)
 
     # Function associates all related alarm values for an incident ID. Store
@@ -129,7 +131,7 @@ class DataProcessor:
     # since that function is dependent on the return from this function
     def create_ticket_label_list(self):
         ticket_data = []
-        with open('TicketData_003.csv', encoding='utf8') as csv_file:
+        with open(self.ticket_file, encoding='utf8') as csv_file:
             reader = csv.reader(csv_file)
             next(reader)
             for row in reader:
@@ -159,6 +161,7 @@ class DataProcessor:
         for ticket in ticket_array_values:
             if len(ticket) > 2:
                 ticket_id_hex_label_arr.append(ticket)
+
         return ticket_id_hex_label_arr
 
     # Gets the hex codes in the master array at index 1, and makes a result
@@ -172,6 +175,7 @@ class DataProcessor:
         for values in valid_ticket_with_labels:
             hex_vals = values[1]
             result_list.append(hex_vals)
+
         return result_list
 
     # This function will accept the array of values, from get_hex_codes, and
@@ -207,19 +211,19 @@ class DataProcessor:
         for values in ticket_arr:
             label_vals = values[2]
             result_list.append(label_vals)
+
         return result_list
 
-    # encodes event cause and returns an array the length of event_cause_vals
-    # TODO: fix references to this function in the testing module
+    # Encodes event cause and returns an array the length of event_cause_vals
     def encode_labels(self, label_arr, value):
         list_len = len(label_arr)
         temp_list = self.zerolistmaker(list_len)
         for option in range(len(label_arr)):
-            # TODO: May need to revert index(value) back to data_arr[option]
             if value == label_arr[option]:
                 temp_list[option] = 1
             else:
                 temp_list[option] = 0
+
         return temp_list
 
     # Target the specific index value inside the label array, within the array
@@ -232,6 +236,7 @@ class DataProcessor:
         for values in option_list:
             result_list.append(self.encode_labels(label_arr,
                                values[index_val]))
+
         return result_list
 
     # Takes in a data set and writes that set, line by line, to the filename
@@ -243,8 +248,9 @@ class DataProcessor:
             except Exception:
                 raise ValueError("Failed to write to file. File may be empty.")
 
-    # TODO: Make this function more generic to accept different input params
+    # Converts list of input data to numpy array of type int
     def convert_array_to_np_array(self, input_data):
         numpy_array = np.array(input_data)
         numpy_array = numpy_array.astype(int)
+
         return numpy_array
