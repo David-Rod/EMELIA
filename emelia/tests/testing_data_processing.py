@@ -2,19 +2,11 @@ import unittest
 import sys
 sys.path.append('../')
 
+# Importing should work if python within conda env is utilized, not machine
 from data_processing import DataProcessor
 
-# Use test ticket data files to initialize the class
+# Use test ticket data files to initialize the class object
 dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
-
-
-def list_strict_equal(list_one, list_two):
-    for item in list_one:
-        item_location = list_one.index(item)
-        if (item != list_two[item_location]):
-            return False
-
-    return True
 
 
 class TestDataProcessing(unittest.TestCase):
@@ -62,6 +54,15 @@ class TestDataProcessing(unittest.TestCase):
 
         self.assertIn('0x47E060D', obs[0][1])
         self.assertIn('Network Fault', obs[0][2])
+
+    def test_encode_hex_values(self):
+        dp = DataProcessor('test_alarm.csv', 'test_ticketdata.csv')
+        id_label_feature_list = dp.get_hex_codes()
+
+        obs = dp.encode_hex_values(id_label_feature_list[4])
+        exp = [0, 0, 1, 0, 0]
+
+        self.assertEqual(obs, exp)
 
 
 if __name__ == '__main__':
