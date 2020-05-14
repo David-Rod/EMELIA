@@ -9,6 +9,28 @@ from progress import run_progress_bar
 
 
 def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
+    '''
+    Function will perform the following actions:
+
+    1. Create predictions using alarm data and saved state files of the
+       learning model
+
+    2. Report prediction results
+
+    3. Store results in a pandas dataframe, which is converted to CSV file
+
+    Parameters:
+
+    alarm_file: alarm file needed to initialize DataProcessor
+
+    ticket_file: ticket file needed to intialize DataProcessor
+
+    test_file: file containing unclassified ticket data
+
+    prediction_file: name of file needed to convert dataframe to CSV (must be
+                       CSV file)
+    '''
+
     # Convert the alarm data to encoded np arrays
     result_alarm_np = convert_test_data(test_file, alarm_file, ticket_file)
 
@@ -18,10 +40,8 @@ def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
     # Create thread to run progress bar
     thread = threading.Thread(target=run_progress_bar, args=(len(ticket_id),))
 
-    '''
-    Test Real Ticket Alarm Data
-    '''
-
+    # Test Real Ticket Alarm Data
+    # Start the thread needed to run the progress bar
     thread.start()
 
     # create prediction arrays using the input data from result_alarm_np
@@ -47,6 +67,8 @@ def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
                        'DETECTION METHOD': dm, 'RESTORE METHOD': rm,
                        'FIX CLASSIFICATION': fc, 'SUBSYSTEM': sub,
                        'RELEVANCE': rel})
+
+    # Convert dataframe to csv file
     df.to_csv(prediction_file, index=False)
 
     # Join thread

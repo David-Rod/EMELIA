@@ -11,6 +11,21 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 def get_compiled_model(input_dimension, input_num, dropout, output):
+    '''
+    Function accepts parameters need to construct and compile TensorFlow
+    learning model. Returns compiled model.
+
+    Parameters:
+
+    input_dimension: dimesion of input array provided to the model
+
+    input_num: number of neurons within input layer
+
+    dropout: dropout rate for hidden layer (float value)
+
+    output: number of neurons in output layer
+    '''
+
     # ##################### LAYERS ####################### #
     model = Sequential()
     # ##################### INPUT  ####################### #
@@ -35,8 +50,18 @@ def get_compiled_model(input_dimension, input_num, dropout, output):
     return model
 
 
-# Store the state of the learning model in the following hdf5 file
 def prediction(test_input, filename):
+    '''
+    Function will utilize directory of saved state files, load the file
+    containing learning model state, and create predictions using predict
+    method.
+
+    Parameters:
+
+    test_input: alarm hex values used as input
+
+    filename: name of the .hdf5 state file
+    '''
     modelpath = './models/' + filename
     model = tf.keras.models.load_model(modelpath)
     return model.predict(test_input)
