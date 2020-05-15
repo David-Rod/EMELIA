@@ -22,7 +22,7 @@ def generate_predictions(alarm, ticket, test, predictions):
                 ticket: ticket file needed to intialize DataProcessor
                 test: file containing unclassified ticket data
                 predictions: name of file needed to convert dataframe to CSV
-                            (must be CSV file)
+                             (must be CSV filename)
     '''
 
     # Convert the alarm data to encoded np arrays
