@@ -6,28 +6,23 @@ from data_processing import DataProcessor
 from progress import run_progress_bar
 
 
-def train_and_validate(alarm_file, ticket_file):
+def train_and_validate(alarm, ticket):
     '''
     Function will perform the following actions:
 
     1. Data will be converted to numpy arrays to be accepted as
        input to the learning model
-
     2. Construct learning model and train on the data provided
-
     3. Generate data predictions using a subset of the ticket data
-
     4. Validate the predictions generated with the test data against the
        manually predicted values in the ticket file
 
-    Parameters:
-
-    alarm_file: alarm file needed to initialize DataProcessor
-
-    ticket_file: ticket file needed to intialize DataProcessor
+            Parameters:
+                alarm: alarm file needed to initialize DataProcessor
+                ticket: ticket file needed to intialize DataProcessor
     '''
     # Initialize DataProcessor object
-    dp = DataProcessor(alarm_file, ticket_file)
+    dp = DataProcessor(alarm, ticket)
 
     # Create thread to run progress bar
     thread = threading.Thread(target=run_progress_bar, args=(670,))

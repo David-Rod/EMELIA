@@ -8,34 +8,28 @@ from learning_model import prediction
 from progress import run_progress_bar
 
 
-def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
+def generate_predictions(alarm, ticket, test, predictions):
     '''
     Function will perform the following actions:
 
     1. Create predictions using alarm data and saved state files of the
        learning model
-
-    2. Report prediction results
-
+    2. Report predictions results
     3. Store results in a pandas dataframe, which is converted to CSV file
 
-    Parameters:
-
-    alarm_file: alarm file needed to initialize DataProcessor
-
-    ticket_file: ticket file needed to intialize DataProcessor
-
-    test_file: file containing unclassified ticket data
-
-    prediction_file: name of file needed to convert dataframe to CSV (must be
-                       CSV file)
+            Parameters:
+                alarm: alarm file needed to initialize DataProcessor
+                ticket: ticket file needed to intialize DataProcessor
+                test: file containing unclassified ticket data
+                predictions: name of file needed to convert dataframe to CSV
+                            (must be CSV file)
     '''
 
     # Convert the alarm data to encoded np arrays
-    result_alarm_np = convert_test_data(test_file, alarm_file, ticket_file)
+    result_alarm_np = convert_test_data(test, alarm, ticket)
 
     # Function that stores array of all ticket ID values in the alarm file
-    ticket_id = report_ticket_id(test_file)
+    ticket_id = report_ticket_id(test)
 
     # Create thread to run progress bar
     thread = threading.Thread(target=run_progress_bar, args=(len(ticket_id),))
@@ -69,7 +63,7 @@ def generate_predictions(alarm_file, ticket_file, test_file, prediction_file):
                        'RELEVANCE': rel})
 
     # Convert dataframe to csv file
-    df.to_csv(prediction_file, index=False)
+    df.to_csv(predictions, index=False)
 
     # Join thread
     thread.join()
